@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 // contiene la interfaz remota del servicio Datos que depende de la entidad Base de Datos
 public interface ServicioDatosInterface extends Remote{
 	
+	public void menu() throws RemoteException;  
 	
 	public void agregarUsuario(String name, String password) throws RemoteException;  
 	

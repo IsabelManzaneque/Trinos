@@ -24,39 +24,44 @@ public class Servidor {
 	public static void main(String[] args) throws Exception {
 		
 		
-		int puerto = 8888;	
-		int puertoBBDD = 5555;
+		int puertoSalida = 8888;	
+		int puertoEntrada = 5555;
 		
 		try {
 			
+			 // ENLACE CON LA BBDD
+			
 			 // Crea una URL para los objetos remotos de los cuales utilizara metodos
-			 String URLDatos = "rmi://localhost:" + puertoBBDD + "/Datos";
+			 String URLDatos = "rmi://localhost:" + puertoEntrada + "/Datos";
 		     // Busqueda del objeto remoto y cast del objeto de la interfaz
 			 ServicioDatosInterface datos = (ServicioDatosInterface)Naming.lookup(URLDatos);
 			 System.out.println("Busqueda de la bbdd completa");			 
-			// Invoca los objetos remotos 
+			 // Invoca los metodos de objetos remotos 
 			 String mensaje = datos.decirHola("Pato Donald");
 			 System.out.println("HolaBBDD: " + mensaje);
 			
-//			se crea un objeto de la clase que implementa la interfaz remota; Para exportar el objeto, se debe registrar su 
-//          referencia en un servicio de directorios. Se utilizará el servicio rmiregistry. Un servidor rmiregistry debe 
-//			ejecutarse en el nodo del servidor de objeto para poder registrar objetos RMI.
 			
-			arrancarRegistro(puerto);
-			
+			// ENLCADE CON SERVICIOS GESTOR Y AUTENTICADOR
+			 
+			// arranca el registro
+			arrancarRegistro(puertoSalida);
+			 
+			// Crea un objeto de las clases impl que implementan las interfaces remotas
 			ServicioGestorImpl gestor = new ServicioGestorImpl();
 			ServicioAutenticacionImpl autenticador = new ServicioAutenticacionImpl();
 			
-			String URLGestor = "rmi://localhost:"+ puerto + "/Gestor";
-			String URLAutenticador = "rmi://localhost:"+ puerto + "/Autenticador";
+			// Exporta los objetos. Para exportarlos, se debe registrar su referencia con el rmiregistry						
+			String URLGestor = "rmi://localhost:"+ puertoSalida + "/Gestor";
+			String URLAutenticador = "rmi://localhost:"+ puertoSalida + "/Autenticador";
 			
 			Naming.rebind(URLGestor, gestor);
 			Naming.rebind(URLAutenticador, autenticador);
+			
 			System.out.println("Servidor registrado. El registro contiene actualmente:");
 			
 			// lista de los nombres que se encuentran en el registro actualmente
 			listaRegistro(URLAutenticador);
-			System.out.println("Servidor HolaMundo preparado.");
+			System.out.println("Servidor preparado.");
 
 			
 		}catch(Exception e) {

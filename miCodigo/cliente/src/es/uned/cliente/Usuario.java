@@ -8,7 +8,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
 
-import es.uned.common.Gui;
 import es.uned.common.ServicioAutenticacionInterface;
 import es.uned.common.ServicioGestorInterface;
 
@@ -25,26 +24,24 @@ import es.uned.common.ServicioGestorInterface;
 
 public class Usuario {
 	
-	
-	
-	static int puerto = 8888;;
-	static String nodo = "localhost";
-
-	
+		
 	public static void main(String[] args){
 		
+		
+		int puerto = 8888;		
 	
-		 try {			 
-
+		try {			 
+			 
+			 // ENLCADE CON SERVIDOR: SERVICIOS GESTOR Y AUTENTICADOR
+			 
  			 // Crea una URL para los objetos remotos de los cuales utilizara metodos
-			 String URLGestor = "rmi://" + nodo + ":" + puerto + "/Gestor";
-			 String URLAutenticador = "rmi://" + nodo + ":" + puerto + "/Autenticador";
+			 String URLGestor = "rmi://localhost:" + puerto + "/Gestor";
+			 String URLAutenticador = "rmi://localhost:" + puerto + "/Autenticador";
 			 
 			 // Busqueda del objeto remoto y cast del objeto de la interfaz
 			 ServicioGestorInterface gestor = (ServicioGestorInterface)Naming.lookup(URLGestor);
-			 ServicioAutenticacionInterface autenticador = (ServicioAutenticacionInterface)Naming.lookup(URLAutenticador);
-			 
-			 System.out.println("Busqueda completa");
+			 ServicioAutenticacionInterface autenticador = (ServicioAutenticacionInterface)Naming.lookup(URLAutenticador);			 
+			 System.out.println("Busqueda de gestor y autenticador completa");
 			
 			 // Invoca los objetos remotos 
 			 String mensaje = gestor.decirHola("Pato Donald");

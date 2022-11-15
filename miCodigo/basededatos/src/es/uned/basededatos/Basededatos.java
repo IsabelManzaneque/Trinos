@@ -19,18 +19,22 @@ public class Basededatos {
 		
 		try {
 			
+			// ENLCADE CON SERVICIOS GESTOR Y AUTENTICADOR
 			arrancarRegistro(puerto);
 			
+			// Crea un objeto de la clase impl que implementa la interfaz remota
 			ServicioDatosImpl datos = new ServicioDatosImpl();
-			String URLDatos = "rmi://localhost:"+ puerto + "/Datos";
 			
-			Naming.rebind(URLDatos, datos);
-			
+			// Exporta el objeto remoto
+			String URLDatos = "rmi://localhost:"+ puerto + "/Datos";			
+			Naming.rebind(URLDatos, datos);			
 			System.out.println("BBDD registrada. El registro contiene actualmente:");
 			
 			// lista de los nombres que se encuentran en el registro actualmente
 			listaRegistro(URLDatos);
 			System.out.println("Base de datos preparada.");
+			
+			datos.menu();
 			
 		}catch(Exception e){
 			System.out.println("Excepción en Servidor.main: " + e);			

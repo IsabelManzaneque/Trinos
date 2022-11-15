@@ -3,9 +3,10 @@ package es.uned.basededatos;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.*;
 import java.util.Map;
+
 
 import es.uned.common.Trino;
 import es.uned.common.ServicioDatosInterface;
@@ -34,13 +35,45 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 	// mapa con la sesion del usuario pendiente de recibir mensajes y una lista de los mensajes pendientes
 	private Map<String, List<Trino>> buffer = new HashMap<>();
 	
+	
+	
 //	private Map<Integer, String> sesion_nombre = new HashMap<Integer, String>();
 //	private Map<String, Integer> nombre_sesion = new HashMap<String, Integer>();
 //	//lista con las sesiones de los usuario conectados
 //	private Map<Integer, List<Integer>> contactos = new HashMap<Integer, List<Integer>>(); 
 	
 
-	
+	public void menu() throws RemoteException{
+		Scanner key = new Scanner(System.in); 
+		String option; 
+		  
+        System.out.println("\n ----------------------------------------------------------");
+        System.out.println(" |                 * Menu Base de Datos *                 |");                               
+        System.out.println(" ----------------------------------------------------------\n");
+        System.out.println("1: Informacion de la base de datos.");
+        System.out.println("2: Listar Trinos (solo nick del propietario y el timestamp).");
+        System.out.println("3: Salir.");
+                
+        do {         
+        	System.out.print("\nEscoja una opcion: ");
+        	option = key.nextLine().trim();		
+            switch(option){
+                case "1":
+                	mostrarUsuarios();
+                    break;
+                case "2":
+                	System.out.print("wow 2");
+                    break;
+                case "3":
+                    key.close();
+                    System.out.print("\nCerrando base de datos...\n");
+                    System.exit(1);
+                default: 
+                    System.out.print("\nInserte una opcion valida");    
+            }            
+        } while(option !="3");
+		
+	}
 	
 	@Override
 	public void agregarUsuario(String name, String password) throws RemoteException {
@@ -101,12 +134,5 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 	public String decirHola(String nombre) throws RemoteException {
 		return "Soy el metodo de ServicioDatosImpl " + nombre;
 	}
-
-
-	
-	
-	
-	
-	
 
 }
