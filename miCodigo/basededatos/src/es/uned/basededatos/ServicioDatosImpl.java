@@ -1,6 +1,7 @@
 package es.uned.basededatos;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,8 +21,12 @@ import es.uned.common.ServicioDatosInterface;
 
 //Los metodos remotos para autenticarse y registrarse los debe tener la clase impl de la base de datos
 
-public class ServicioDatosImpl implements ServicioDatosInterface{
+public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDatosInterface{
 	
+	protected ServicioDatosImpl() throws RemoteException {
+		super();
+	}
+
 	private HashMap<String,String> usuarios = new HashMap<>();	
 	private HashMap<String,String> usuariosConectados = new HashMap<>();	
 	// lista de trinos por usuario, key es el 
@@ -90,6 +95,11 @@ public class ServicioDatosImpl implements ServicioDatosInterface{
 		// si lo es, borra todos los elementos de la lista
 		buffer.get(name).clear();
 		
+	}
+
+	@Override
+	public String decirHola(String nombre) throws RemoteException {
+		return "Soy el metodo de ServicioDatosImpl " + nombre;
 	}
 
 

@@ -21,6 +21,7 @@ public interface ServicioDatosInterface extends Remote{
 	
 	public void limpiarBuffer(String name) throws RemoteException; 
 	
+	public String decirHola(String nombre) throws RemoteException;
 	
 //	// Enviar mensaje. Cuerpo del mensaje, la sesion de quien lo envia y la sesion de a quien lo envia
 //	public void enviar(String cuerpoMensaje, int sesionDe, int sesionA) throws RemoteException;  

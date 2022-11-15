@@ -7,6 +7,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import es.uned.common.ServicioDatosInterface;
+import es.uned.common.ServicioGestorInterface;
+
 //La entidad Servidor se encarga de controlar el proceso de autenticación de
 //los usuarios del sistema y gestión de sus mensajes
 
@@ -22,8 +25,18 @@ public class Servidor {
 		
 		
 		int puerto = 8888;	
+		int puertoBBDD = 5555;
 		
 		try {
+			
+			 // Crea una URL para los objetos remotos de los cuales utilizara metodos
+			 String URLDatos = "rmi://localhost:" + puertoBBDD + "/Datos";
+		     // Busqueda del objeto remoto y cast del objeto de la interfaz
+			 ServicioDatosInterface datos = (ServicioDatosInterface)Naming.lookup(URLDatos);
+			 System.out.println("Busqueda de la bbdd completa");			 
+			// Invoca los objetos remotos 
+			 String mensaje = datos.decirHola("Pato Donald");
+			 System.out.println("HolaBBDD: " + mensaje);
 			
 //			se crea un objeto de la clase que implementa la interfaz remota; Para exportar el objeto, se debe registrar su 
 //          referencia en un servicio de directorios. Se utilizará el servicio rmiregistry. Un servidor rmiregistry debe 
