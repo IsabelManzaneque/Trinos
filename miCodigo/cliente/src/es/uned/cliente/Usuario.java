@@ -1,15 +1,14 @@
 package es.uned.cliente;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.util.List;
+import java.util.Scanner;
 
 import es.uned.common.ServicioAutenticacionInterface;
+import es.uned.common.ServicioDatosInterface;
 import es.uned.common.ServicioGestorInterface;
+
 
 
 // Para ejecutar esta clase el servidor debe estar corriendo!! arrancar registro, ejecutar
@@ -24,36 +23,108 @@ import es.uned.common.ServicioGestorInterface;
 
 public class Usuario {
 	
+	static int puerto = 8888;	
+	// Crea una URL para los objetos remotos de los cuales utilizara metodos
+	static String URLGestor = "rmi://localhost:" + puerto + "/Gestor";
+	static String URLAutenticador = "rmi://localhost:" + puerto + "/Autenticador";
 		
-	public static void main(String[] args){
-		
-		
-		int puerto = 8888;		
+	public static void main(String[] args){			
 	
 		try {			 
 			 
-			 // ENLCADE CON SERVIDOR: SERVICIOS GESTOR Y AUTENTICADOR
-			 
- 			 // Crea una URL para los objetos remotos de los cuales utilizara metodos
-			 String URLGestor = "rmi://localhost:" + puerto + "/Gestor";
-			 String URLAutenticador = "rmi://localhost:" + puerto + "/Autenticador";
-			 
+			 // ENLCADE CON SERVIDOR: SERVICIOS GESTOR Y AUTENTICADOR 			 
 			 // Busqueda del objeto remoto y cast del objeto de la interfaz
 			 ServicioGestorInterface gestor = (ServicioGestorInterface)Naming.lookup(URLGestor);
 			 ServicioAutenticacionInterface autenticador = (ServicioAutenticacionInterface)Naming.lookup(URLAutenticador);			 
-			 System.out.println("Busqueda de gestor y autenticador completa");
-			
-			 // Invoca los objetos remotos 
-			 String mensaje = gestor.decirHola("Pato Donald");
-			 System.out.println("HolaGestor: " + mensaje);
+			 System.out.println("Busqueda de gestor y autenticador completa");			
 			 
-			 String mensaje2 = autenticador.decirHola("Pato Donald");
-			 System.out.println("HolaAutenticador: " + mensaje2);
+			 mainMenu(gestor, autenticador);
 			 
 		 } catch (Exception e) {
 			 System.out.println("Excepcion en HolaMundoCliente: " + e);
 		 }
 	}
+	public static void mainMenu(ServicioGestorInterface gestor, ServicioAutenticacionInterface autenticador) throws RemoteException{
+		Scanner key = new Scanner(System.in); 
+		String option; 
+		  
+        System.out.println("\n -----------------------------------------------------------");
+        System.out.println(" |                    * Menu Usuario *                    |");                               
+        System.out.println(" -----------------------------------------------------------\n");
+        System.out.println("1: Registrar un nuevo usuario.");
+        System.out.println("2: Hacer login");
+        System.out.println("3: Salir.");
+                       
+        do {         
+        	System.out.print("\nEscoja una opcion: ");
+        	option = key.nextLine().trim();		
+            switch(option){
+                case "1":
+                	System.out.print("wow 2");
+                    break;
+                case "2":
+                	menu(gestor, autenticador);
+                    break;           
+                case "3":
+                    key.close();
+                    System.out.print("\nCerrando cliente...\n");
+                    System.exit(1);
+                default: 
+                    System.out.print("\nInserte una opcion valida");    
+            }            
+        } while(option !="3");
+		
+	}
+	public static void menu(ServicioGestorInterface gestor, ServicioAutenticacionInterface autenticador) throws RemoteException{
+		Scanner key = new Scanner(System.in); 
+		String option; 
+		  
+        System.out.println("\n -----------------------------------------------------------");
+        System.out.println(" |                    * Menu Usuario *                    |");                               
+        System.out.println(" -----------------------------------------------------------\n");
+        System.out.println("1: Información del Usuario.");
+        System.out.println("2: Enviar Trino.");
+        System.out.println("3: Listar Usuarios del Sistema.");
+        System.out.println("4: Seguir a.");
+        System.out.println("5: Dejar de seguir a.");
+        System.out.println("6: Borrar trino a los usuarios que todavía no lo han recibido (opcional).");
+        System.out.println("7: Salir \"Logout\"");
+                
+        do {         
+        	System.out.print("\nEscoja una opcion: ");
+        	option = key.nextLine().trim();		
+            switch(option){
+                case "1":
+                   	System.out.println("\tServicios activos: \n\t- " + URLGestor + "\n\t- " + URLAutenticador);
+                    break;
+                case "2":
+                	System.out.print("wow 2");
+                    break;
+                case "3":
+                	System.out.print("wow 3");
+                    break;
+                case "4":
+                	System.out.print("wow 4");
+                    break;
+                case "5":
+                	System.out.print("wow 5");
+                    break;
+                case "6":
+                	System.out.print("wow 6");
+                    break;
+                case "7":
+                    key.close();
+                    System.out.print("\nCerrando cliente...\n");
+                    System.exit(1);
+                default: 
+                    System.out.print("\nInserte una opcion valida");    
+            }            
+        } while(option !="7");
+		
+	}
+
+
+
 }
 			 
 

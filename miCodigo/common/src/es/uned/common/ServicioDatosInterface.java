@@ -2,17 +2,16 @@ package es.uned.common;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 
 // contiene la interfaz remota del servicio Datos que depende de la entidad Base de Datos
 public interface ServicioDatosInterface extends Remote{
 	
-	public void menu() throws RemoteException;  
-	
+		
 	public void agregarUsuario(String name, String password) throws RemoteException;  
 	
 	public void borrarUsuario() throws RemoteException;
 	
-	public void mostrarUsuarios() throws RemoteException;
 	
 	public void banearUsuario() throws RemoteException;
 	
@@ -21,6 +20,8 @@ public interface ServicioDatosInterface extends Remote{
 	public void borrarTrino(Trino trino) throws RemoteException;
 	
 	public void limpiarBuffer(String name) throws RemoteException; 
+	public HashMap<String, String> getUsuarios() throws RemoteException;
+	public HashMap<String, String> getUsuariosConectados() throws RemoteException;
 	
 	public String decirHola(String nombre) throws RemoteException;
 	

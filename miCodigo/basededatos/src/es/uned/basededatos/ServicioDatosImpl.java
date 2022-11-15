@@ -43,37 +43,6 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 //	private Map<Integer, List<Integer>> contactos = new HashMap<Integer, List<Integer>>(); 
 	
 
-	public void menu() throws RemoteException{
-		Scanner key = new Scanner(System.in); 
-		String option; 
-		  
-        System.out.println("\n ----------------------------------------------------------");
-        System.out.println(" |                 * Menu Base de Datos *                 |");                               
-        System.out.println(" ----------------------------------------------------------\n");
-        System.out.println("1: Informacion de la base de datos.");
-        System.out.println("2: Listar Trinos (solo nick del propietario y el timestamp).");
-        System.out.println("3: Salir.");
-                
-        do {         
-        	System.out.print("\nEscoja una opcion: ");
-        	option = key.nextLine().trim();		
-            switch(option){
-                case "1":
-                	mostrarUsuarios();
-                    break;
-                case "2":
-                	System.out.print("wow 2");
-                    break;
-                case "3":
-                    key.close();
-                    System.out.print("\nCerrando base de datos...\n");
-                    System.exit(1);
-                default: 
-                    System.out.print("\nInserte una opcion valida");    
-            }            
-        } while(option !="3");
-		
-	}
 	
 	@Override
 	public void agregarUsuario(String name, String password) throws RemoteException {
@@ -82,20 +51,10 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		
 	}
 	
-	@Override
-	public void mostrarUsuarios() throws RemoteException {
-		
-		 usuarios.forEach((key, value) ->
-		 {
-			 System.out.println("key: " + key + " value: " + value);
-	            
-	     });		
-	}
-	
+			
 
 	@Override
-	public void borrarUsuario() throws RemoteException {
-		
+	public void borrarUsuario() throws RemoteException {	
 		
 		
 	}
@@ -129,10 +88,20 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		buffer.get(name).clear();
 		
 	}
+	
+	public HashMap<String, String> getUsuarios() throws RemoteException {
+		return usuarios;
+	}
+
+	public HashMap<String, String> getUsuariosConectados() throws RemoteException {
+		return usuariosConectados;
+	}
 
 	@Override
 	public String decirHola(String nombre) throws RemoteException {
 		return "Soy el metodo de ServicioDatosImpl " + nombre;
 	}
+	
+	
 
 }

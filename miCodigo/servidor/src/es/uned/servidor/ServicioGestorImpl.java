@@ -10,13 +10,11 @@ import es.uned.common.ServicioGestorInterface;
 // con enviar trinos, bloquear y hacerse seguidor de otros  usuarios. Cuando un usuario se hace seguidor de otro 
 // usuario, el primero recibe automáticamente los trinos del segundo cuando los publica. 
 
-public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioGestorInterface{
-	
+public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioGestorInterface{	
 
 
 	protected ServicioGestorImpl() throws RemoteException {
-		super();
-		
+		super();		
 	}
 
 	@Override

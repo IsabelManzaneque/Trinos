@@ -1,14 +1,12 @@
 package es.uned.servidor;
 
-
-import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-
+import java.util.Scanner;
 import es.uned.common.ServicioDatosInterface;
-import es.uned.common.ServicioGestorInterface;
+
 
 //La entidad Servidor se encarga de controlar el proceso de autenticación de
 //los usuarios del sistema y gestión de sus mensajes
@@ -18,51 +16,35 @@ import es.uned.common.ServicioGestorInterface;
 //objeto.
 
 public class Servidor {
+
 	
-	//private ServicioDatosInterface bbdd;
+	static int puertoSalida = 8888;	
+	static int puertoEntrada = 5555;
+	// Crea una URL para los objetos remotos de los cuales utilizara metodos
+	static String URLGestor = "rmi://localhost:"+ puertoSalida + "/Gestor";
+	static String URLAutenticador = "rmi://localhost:"+ puertoSalida + "/Autenticador";
+	static String URLDatos = "rmi://localhost:" + puertoEntrada + "/Datos";
 	
-	public static void main(String[] args) throws Exception {
-		
-		
-		int puertoSalida = 8888;	
-		int puertoEntrada = 5555;
+	public static void main(String[] args) throws Exception {		
 		
 		try {
 			
-			 // ENLACE CON LA BBDD
-			
-			 // Crea una URL para los objetos remotos de los cuales utilizara metodos
-			 String URLDatos = "rmi://localhost:" + puertoEntrada + "/Datos";
+			 // ENLACE CON LA BBDD			
 		     // Busqueda del objeto remoto y cast del objeto de la interfaz
-			 ServicioDatosInterface datos = (ServicioDatosInterface)Naming.lookup(URLDatos);
-			 System.out.println("Busqueda de la bbdd completa");			 
-			 // Invoca los metodos de objetos remotos 
-			 String mensaje = datos.decirHola("Pato Donald");
-			 System.out.println("HolaBBDD: " + mensaje);
+			 ServicioDatosInterface datos = (ServicioDatosInterface)Naming.lookup(URLDatos);		
 			
-			
-			// ENLCADE CON SERVICIOS GESTOR Y AUTENTICADOR
-			 
+			// ENLCADE CON SERVICIOS GESTOR Y AUTENTICADOR			 
 			// arranca el registro
 			arrancarRegistro(puertoSalida);
 			 
 			// Crea un objeto de las clases impl que implementan las interfaces remotas
 			ServicioGestorImpl gestor = new ServicioGestorImpl();
 			ServicioAutenticacionImpl autenticador = new ServicioAutenticacionImpl();
-			
-			// Exporta los objetos. Para exportarlos, se debe registrar su referencia con el rmiregistry						
-			String URLGestor = "rmi://localhost:"+ puertoSalida + "/Gestor";
-			String URLAutenticador = "rmi://localhost:"+ puertoSalida + "/Autenticador";
-			
+					
 			Naming.rebind(URLGestor, gestor);
 			Naming.rebind(URLAutenticador, autenticador);
-			
-			System.out.println("Servidor registrado. El registro contiene actualmente:");
-			
-			// lista de los nombres que se encuentran en el registro actualmente
-			listaRegistro(URLAutenticador);
-			System.out.println("Servidor preparado.");
-
+						
+			menu(gestor, autenticador, datos);
 			
 		}catch(Exception e) {
 			System.out.println("Excepción en Servidor.main: " + e);
@@ -76,23 +58,67 @@ public class Servidor {
 		
 		try {
 			Registry registro = LocateRegistry.getRegistry(numPuertoRMI);
-			registro.list(); // Esta llamada lanza una excepción si el registro no existe
-		
+			// lanza una excepción si el registro no existe
+			registro.list(); 		
 		}catch(RemoteException e) {
 			// Registro no válido en este puerto
-			 System.out.println("El registro RMI no se puede localizar en el puerto "+ numPuertoRMI);
-			 Registry registro = LocateRegistry.createRegistry(numPuertoRMI);
-			 System.out.println("Registro RMI creado en el puerto " + numPuertoRMI);			
+			System.out.println("El registro RMI no se puede localizar en el puerto "+ numPuertoRMI);
+			Registry registro = LocateRegistry.createRegistry(numPuertoRMI);
+			System.out.println("Registro RMI creado en el puerto " + numPuertoRMI);			
 		}
 	}
 	
-	// Este método lista los nombres registrados con un objeto Registry
-	private static void listaRegistro(String URLRegistro) throws RemoteException, MalformedURLException {
+	
+	public static void menu(ServicioGestorImpl g,ServicioAutenticacionImpl a, ServicioDatosInterface d) throws RemoteException{
+		Scanner key = new Scanner(System.in); 
+		String option; 
+		  
+        System.out.println("\n -----------------------------------------------------------");
+        System.out.println(" |                    * Menu Servidor *                    |");                               
+        System.out.println(" -----------------------------------------------------------\n");
+        System.out.println("1: Información del Servidor.");
+        System.out.println("2: Listar Usuarios Registrados.");
+        System.out.println("3: Listar Usuarios Logueados.");
+        System.out.println("4: Bloquear (banear) usuario. ");
+        System.out.println("5: Desbloquear usuario");
+        System.out.println("6: Salir.");
+                
+        do {         
+        	System.out.print("\nEscoja una opcion: ");
+        	option = key.nextLine().trim();		
+            switch(option){
+                case "1":
+                   	System.out.println("\tServicios activos: \n\t- " + URLGestor + "\n\t- " + URLAutenticador);
+                    break;
+                case "2":
+                	                	
+                	if(d.getUsuarios().isEmpty()) {
+            			System.out.println("No hay usuarios registrados");
+            		}else {
+            			d.getUsuarios().forEach((k, v) ->
+            			{			
+            			    System.out.println("key: " + k + " value: " + v);	           
+            		    });		
+            		}
+                    break;
+                case "3":
+                	System.out.print("wow 3");
+                    break;
+                case "4":
+                	System.out.print("wow 4");
+                    break;
+                case "5":
+                	System.out.print("wow 5");
+                    break;
+                case "6":
+                    key.close();
+                    System.out.print("\nCerrando servidor...\n");
+                    System.exit(1);
+                default: 
+                    System.out.print("\nInserte una opcion valida");    
+            }            
+        } while(option !="6");
 		
-		System.out.println("Registro " + URLRegistro + " contiene: ");
-		 String [] names = Naming.list(URLRegistro);
-		 for (int i=0; i<names.length; i++)
-			 System.out.println(names[i]);
 	}
 
 }
