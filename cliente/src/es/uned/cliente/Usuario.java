@@ -44,7 +44,7 @@ public class Usuario {
 			 mainMenu();
 			 
 		 } catch (Exception e) {
-			 System.out.println("Excepcion en HolaMundoCliente: " + e);
+			 System.out.println("Excepcion en Cliente: " + e);
 		 }
 	}
 	
@@ -65,7 +65,7 @@ public class Usuario {
         	option = key.nextLine().trim();		
             switch(option){
                 case "1":
-                	nuevoUsuario();
+                	register();
                     break;
                 case "2":
                 	login();
@@ -110,10 +110,10 @@ public class Usuario {
                 	System.out.print("wow 3");
                     break;
                 case "4":
-                	System.out.print("wow 4");
+                	follow(nick);
                     break;
                 case "5":
-                	System.out.print("wow 5");
+                	unfollow(nick);
                     break;
                 case "6":
                 	System.out.print("wow 6");
@@ -131,16 +131,16 @@ public class Usuario {
 	}
 	
 	
-	// en el cliente implementamos los metodos enviaf trino y recibir y tal localmente, no en otra clase
+	// LA INFO PERSONAL ES NOMBRE< NICK (ID) Y PASSWORD
 
-	private static void nuevoUsuario() {
+	private static void register() {
 		Scanner scanner = new Scanner(System.in); 		
 	
 		System.out.print("Introduzca su nick: ");
 	    String nick = scanner.nextLine().trim().toLowerCase();
 	    System.out.print("Introduzca su password: ");
 	    String password = scanner.nextLine().trim().toLowerCase();
-
+	     
 	    
 	    try {
 			if(autenticador.registrar(nick, password)) {
@@ -164,6 +164,7 @@ public class Usuario {
 	    System.out.print("Introduzca su password: ");
 	    String password = scanner.nextLine().trim().toLowerCase();
 	    
+	    
 	    try {
 			if(autenticador.autenticar(nick, password)) {
 				userMenu(nick);
@@ -177,55 +178,59 @@ public class Usuario {
 		
 	}
 	
-	private static void logout() {
-		
-		
-	}
-	
-	private static void enviarTrino() {
-		
-	}
 	
 	private static void listarUsuarios() {
 		
 	}
 	
-	private static void follow() {
+	
+	private static void follow(String miNick) {
 		
+		Scanner scanner = new Scanner(System.in); 		
+		
+		System.out.print("Introduzca nick de usuario que quiere seguir: ");
+	    String suNick = scanner.nextLine().trim().toLowerCase();
+		       
+	    try {
+			if(gestor.seguir(miNick, suNick)) {
+				System.out.println("Se ha comenzado a seguir al usuario");
+			}else {
+				System.out.println("No se encuentra usuario con ese nick");
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}  
 	}
 	
-	private static void unfollow() {
+	private static void unfollow(String miNick) {
+		
+        Scanner scanner = new Scanner(System.in); 		
+		
+		System.out.print("Introduzca nick de usuario que quiere dejar de seguir: ");
+	    String suNick = scanner.nextLine().trim().toLowerCase();
+		       
+	    try {
+			if(gestor.dejarDeSeguir(miNick, suNick)) {
+				System.out.println("Se ha dejado de seguir al usuario");
+			}else {
+				System.out.println("El usuario no esta en su lista de contactos");
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}  
+	}
+		
+	
+	
+	private static void enviarTrino() {
 		
 	}
 
 }	
 
 
-	
 
-//	
-//	
-//	//Para la autenticacion tambien deberiamos pedir contrasena 
-//	private static void autenticarse() throws RemoteException {
-//		String nombre = Gui.input("Autenticarse", "Ingrese su nombre: ");
-//		
-//		if (nombre != null && !nombre.isEmpty()) {
-//			//Primera llamada remota, nos devuelve un entero con el id de sesion
-//			miSesion = servidor.autenticar(nombre);
-//		}
-//	}
-//	
-//	private static void agregarContacto() throws RemoteException {
-//		String contacto = Gui.input("Agregar Contacto", "Ingrese el contacto: ");
-//		
-//		if (contacto != null && !contacto.isEmpty()) {
-//			// llamada remota para agregar a alguien, devuelve la sesion de mi contacto
-//			int suSesion = servidor.agregar(contacto, miSesion);
-//			System.out.println("La sesion de " + contacto + " es " + suSesion);
-//		}
-//	}
-//	
-//	
+
 //	private static void recibirMensajes() throws RemoteException {
 //		System.out.println("=== Mensajes recibidos ===");
 //		

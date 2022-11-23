@@ -11,6 +11,5 @@ public interface ServicioAutenticacionInterface extends Remote{
 	
 	public void desconectar(String nick) throws RemoteException; 
 	
-	public String decirHola(String nombre) throws RemoteException;
 
 }

@@ -28,35 +28,37 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		super();
 	}
 
-	private HashMap<String,String> usuarios = new HashMap<>();	
+	private HashMap<String,String> usuariosRegistrados = new HashMap<>();	
 	private HashMap<String,String> usuariosConectados = new HashMap<>();	
-	// lista de trinos por usuario, key es el 
-	private HashMap<String,List<String>> trinos = new HashMap<>();
-	// mapa con la sesion del usuario pendiente de recibir mensajes y una lista de los mensajes pendientes
-	private Map<String, List<Trino>> buffer = new HashMap<>();
-	
-	
-	
-//	private Map<Integer, String> sesion_nombre = new HashMap<Integer, String>();
-//	private Map<String, Integer> nombre_sesion = new HashMap<String, Integer>();
-//	//lista con las sesiones de los usuario conectados
-//	private Map<Integer, List<Integer>> contactos = new HashMap<Integer, List<Integer>>(); 
+	// mapa donde key es el usuario y value su lista de trinos 
+	private HashMap<String, ArrayList<Trino>> trinos = new HashMap<>();
+	// mapa donde key es un usuario y value su lista de contactos
+	private HashMap<String, ArrayList<String>> contactos = new HashMap<>();
+	// mapa con el usuario pendiente de recibir mensajes y una lista de los mensajes pendientes
+	private HashMap<String, ArrayList<Trino>> buffer = new HashMap<>();	
 	
 
 	
-	@Override
 	public boolean agregarUsuario(String nick, String password) throws RemoteException {
 		
-		if(usuarios.containsKey(nick)) {
+		if(usuariosRegistrados.containsKey(nick)) {
 			return false;
 		}
-		usuarios.put(nick, password);
+		usuariosRegistrados.put(nick, password);
+		contactos.put(nick, new ArrayList<>());
+		trinos.put(nick,new ArrayList<>());
 		return true;
+	}
+	
+	
+	public void borrarUsuario(String nick) throws RemoteException {	
+		
+		usuariosRegistrados.remove(nick);
 	}
 	
 	public boolean agregarConectado(String nick, String password) throws RemoteException {
 		
-		if(!usuarios.containsKey(nick) || !usuarios.get(nick).equals(password)) {
+		if(!usuariosRegistrados.containsKey(nick) || !usuariosRegistrados.get(nick).equals(password)) {
 			return false;
 		}
 		usuariosConectados.put(nick, password);
@@ -68,13 +70,26 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		usuariosConectados.remove(nick);
 	}
 	
-			
-
-	@Override
-	public void borrarUsuario() throws RemoteException {	
+	public boolean agregarContacto(String miNick, String suNick) throws RemoteException {
 		
-		
+		if(usuariosRegistrados.containsKey(suNick)) {			
+			contactos.get(miNick).add(suNick);
+			return true;		
+		}
+		return false;
 	}
+	
+	public boolean borrarContacto(String miNick, String suNick) throws RemoteException{
+		
+		if(contactos.get(miNick).contains(suNick)) {
+			contactos.get(miNick).remove(suNick);        
+			return true;
+		}
+		return false;
+		
+	}		
+
+	
 
 	@Override
 	public void banearUsuario() throws RemoteException {
@@ -98,7 +113,7 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 	public void limpiarBuffer(String name) throws RemoteException {
 		
 		// comprueba que la sesion es valida
-		if (!usuarios.containsKey(name)) {
+		if (!usuariosRegistrados.containsKey(name)) {
 			throw new RuntimeException("no exite el usuario");
 		}
 		// si lo es, borra todos los elementos de la lista
@@ -106,20 +121,18 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		
 	}
 	
-	public HashMap<String, String> getUsuarios() throws RemoteException {
-		return usuarios;
+	public HashMap<String, String> getUsuariosRegistrados() throws RemoteException {
+		return usuariosRegistrados;
 	}
 
 	public HashMap<String, String> getUsuariosConectados() throws RemoteException {
 		return usuariosConectados;
 	}
-
-	@Override
-	public String decirHola(String nombre) throws RemoteException {
-		return "Soy el metodo de ServicioDatosImpl " + nombre;	
+	
+	public HashMap<String, ArrayList<String>> getContactos() throws RemoteException {
+		return contactos;
 	}
-	
-	
+
 	
 
 }

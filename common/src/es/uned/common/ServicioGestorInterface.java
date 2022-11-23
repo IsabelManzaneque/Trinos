@@ -5,10 +5,11 @@ import java.rmi.RemoteException;
 
 
 //contiene la interfaz remota del servicio Gestor que depende de la entidad Servidor
-public interface ServicioGestorInterface extends Remote{
+public interface ServicioGestorInterface extends Remote{	
 	
-		
-	public String decirHola(String nombre) throws RemoteException;
+	public boolean seguir(String miNick, String suNick) throws RemoteException; 
 	
-
+	public boolean dejarDeSeguir(String miNick, String suNick) throws RemoteException; 
+	
+	
 }

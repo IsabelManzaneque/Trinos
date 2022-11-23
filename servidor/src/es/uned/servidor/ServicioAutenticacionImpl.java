@@ -13,7 +13,7 @@ import es.uned.common.ServicioAutenticacionInterface;
 // este servicio de Autenticación.
 
 public class ServicioAutenticacionImpl extends UnicastRemoteObject implements ServicioAutenticacionInterface{
-	
+		
 		
 	protected ServicioAutenticacionImpl() throws RemoteException {
 		super();
@@ -21,24 +21,23 @@ public class ServicioAutenticacionImpl extends UnicastRemoteObject implements Se
 	
 	
 	// La operación de registro consiste en que los usuarios introducen en el sistema por primera vez sus datos personales
-		// (nombre, nick (apodo) y password), siendo el nick el identificador único de usuario. Es decir, no pueden existir dos 
-		// usuarios en el sistema con el mismo nick.
-		public boolean registrar(String nick, String password) throws RemoteException {	
-			
-			return Servidor.addNuevo(nick, password);			
-		}
+	// (nombre, nick (apodo) y password), siendo el nick el identificador único de usuario. Es decir, no pueden existir dos 
+	// usuarios en el sistema con el mismo nick.
+	public boolean registrar(String nick, String password) throws RemoteException {	
 		
-		//Cuando se autentica un nombre, devuelve una sesion de usuario
-		@Override
-		public boolean autenticar(String nick, String password) throws RemoteException {
-			
-			return Servidor.addConectado(nick, password);
-		}
+		return Servidor.addNuevo(nick, password);			
+	}
+	
+
+	public boolean autenticar(String nick, String password) throws RemoteException {
 		
-		public void desconectar(String nick) throws RemoteException {	
-			
-			Servidor.deleteConectado(nick);		
-		}
+		return Servidor.addConectado(nick, password);
+	}
+	
+	public void desconectar(String nick) throws RemoteException {	
+		
+		Servidor.deleteConectado(nick);		
+	}
 			
 				
 			
@@ -59,14 +58,6 @@ public class ServicioAutenticacionImpl extends UnicastRemoteObject implements Se
 			return ++sesion;
 		}
 	
-	
-	
-	@Override
-	public String decirHola(String nombre) throws RemoteException {
-		// TODO Auto-generated method stub
-		return "Soy el metodo de ServicioAutenticacionImpl " + nombre;
-	}
 
-	
 
 }

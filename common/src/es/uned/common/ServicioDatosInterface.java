@@ -10,12 +10,15 @@ public interface ServicioDatosInterface extends Remote{
 		
 	public boolean agregarUsuario(String nick, String password) throws RemoteException;  
 	
+	public void borrarUsuario(String nick) throws RemoteException;
+	
 	public boolean agregarConectado(String nick, String password) throws RemoteException;
 	
 	public void borrarConectado(String nick) throws RemoteException;
 	
-	public void borrarUsuario() throws RemoteException;
+	public boolean agregarContacto(String miNick, String suNick) throws RemoteException;
 	
+	public boolean borrarContacto(String miNick, String suNick) throws RemoteException;
 	
 	public void banearUsuario() throws RemoteException;
 	
@@ -25,11 +28,11 @@ public interface ServicioDatosInterface extends Remote{
 	
 	public void limpiarBuffer(String name) throws RemoteException; 
 	
-	public HashMap<String, String> getUsuarios() throws RemoteException;
+	public HashMap<String, String> getUsuariosRegistrados() throws RemoteException;
 	
 	public HashMap<String, String> getUsuariosConectados() throws RemoteException;
 	
-	public String decirHola(String nombre) throws RemoteException;
+	
 	
 //	// Enviar mensaje. Cuerpo del mensaje, la sesion de quien lo envia y la sesion de a quien lo envia
 //	public void enviar(String cuerpoMensaje, int sesionDe, int sesionA) throws RemoteException;  

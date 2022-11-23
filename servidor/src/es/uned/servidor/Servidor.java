@@ -93,10 +93,10 @@ public class Servidor {
                     break;
                 case "2":
                 	                	
-                	if(datos.getUsuarios().isEmpty()) {
+                	if(datos.getUsuariosRegistrados().isEmpty()) {
             			System.out.println("No hay usuarios registrados");
             		}else {
-            			datos.getUsuarios().forEach((k, v) ->
+            			datos.getUsuariosRegistrados().forEach((k, v) ->
             			{			
             			    System.out.println("key: " + k + " value: " + v);	           
             		    });		
@@ -144,6 +144,18 @@ public class Servidor {
 	public static void deleteConectado(String nick) throws RemoteException {
 		
 		datos.borrarConectado(nick);
+			
+	}
+	
+	public static boolean followUsuario(String miNick, String suNick) throws RemoteException {
+		
+		return datos.agregarContacto(miNick, suNick);	
+			
+	}
+	
+	public static boolean unFollowUsuario(String miNick, String suNick) throws RemoteException {
+		
+		return datos.borrarContacto(miNick, suNick);	
 			
 	}
 

@@ -17,10 +17,18 @@ public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioG
 		super();		
 	}
 
-	@Override
-	public String decirHola(String nombre) throws RemoteException {
-		// TODO Auto-generated method stub
-		return "Soy el metodo de ServicioGestorImpl " + nombre;
+	public boolean seguir(String miNick, String suNick) throws RemoteException {
+		
+		return Servidor.followUsuario(miNick, suNick);
 	}
+
+	public boolean dejarDeSeguir(String miNick, String suNick) throws RemoteException {
+		
+		return Servidor.unFollowUsuario(miNick, suNick);
+	}
+	
+	
+	
+	
 
 }

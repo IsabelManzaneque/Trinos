@@ -63,14 +63,15 @@ public class Basededatos {
         System.out.println("1: Informacion de la base de datos.");
         System.out.println("2: Listar Trinos (solo nick del propietario y el timestamp).");
         System.out.println("3: Salir.");
-                
+        
+           
         do {         
         	System.out.print("\nEscoja una opcion: ");
         	option = key.nextLine().trim();		
             switch(option){
                 case "1":
                 	System.out.println("\tServicios activos: \n\t- " + URLDatos);
-                	System.out.println("\tUsuarios registrados: \n\t- " + datos.getUsuarios().size());
+                	System.out.println("\tUsuarios registrados: \n\t- " + datos.getUsuariosRegistrados().size());
                 	System.out.println("\tUsuarios conectados: \n\t- " + datos.getUsuariosConectados().size());
                     break;
                 case "2":
