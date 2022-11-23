@@ -108,7 +108,7 @@ public class Usuario {
                 	System.out.print("wow 2");
                     break;
                 case "3":
-                	System.out.print("wow 3");
+                	listarUsuarios();
                     break;
                 case "4":
                 	follow(nick);
@@ -177,13 +177,20 @@ public class Usuario {
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}  
-		
+		}  		
 	}
 	
 	
-	private static void listarUsuarios() {
+	private static void listarUsuarios() throws RemoteException {
 		
+		if(gestor.mostrarUsuarios().isEmpty()) {
+			System.out.println("No hay usuarios registrados");
+		}else {
+			gestor.mostrarUsuarios().forEach((k, v) ->
+			{			
+			    System.out.println("key: " + k + " value: " + v);	           
+		    });		
+		}			
 	}
 	
 	

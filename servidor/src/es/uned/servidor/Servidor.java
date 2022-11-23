@@ -4,6 +4,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.HashMap;
 import java.util.Scanner;
 import es.uned.common.ServicioDatosInterface;
 import es.uned.common.User;
@@ -93,25 +94,10 @@ public class Servidor {
                    	System.out.println("\tServicios activos: \n\t- " + URLGestor + "\n\t- " + URLAutenticador);
                     break;
                 case "2":
-                	                	
-                	if(datos.getUsuariosRegistrados().isEmpty()) {
-            			System.out.println("No hay usuarios registrados");
-            		}else {
-            			datos.getUsuariosRegistrados().forEach((k, v) ->
-            			{			
-            			    System.out.println("key: " + k + " value: " + v);	           
-            		    });		
-            		}
+                	mostrarUsuarios(datos.getUsuariosRegistrados());
                     break;
                 case "3":
-                	if(datos.getUsuariosConectados().isEmpty()) {
-            			System.out.println("No hay usuarios conectados");
-            		}else {
-            			datos.getUsuariosConectados().forEach((k, v) ->
-            			{			
-            			    System.out.println("key: " + k + " value: " + v);	           
-            		    });		
-            		}
+                	mostrarUsuarios(datos.getUsuariosConectados());
                     break;
                 case "4":
                 	System.out.print("wow 4");
@@ -147,6 +133,24 @@ public class Servidor {
 		datos.borrarConectado(nick);
 			
 	}
+	
+	public static void mostrarUsuarios(HashMap<String, User> map) throws RemoteException {
+		
+		if(map.isEmpty()) {
+			System.out.println("No hay usuarios registrados");
+		}else {
+			map.forEach((k, v) ->
+			{			
+			    System.out.println("key: " + k + " value: " + v);	           
+		    });		
+		}		
+	}
+	
+	public static HashMap<String, User> enviarRegistrados() throws RemoteException{
+		
+		return datos.getUsuariosRegistrados();
+	}
+	
 	
 	public static boolean followUsuario(String miNick, String suNick) throws RemoteException {
 		

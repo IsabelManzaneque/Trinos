@@ -2,8 +2,10 @@ package es.uned.servidor;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 
 import es.uned.common.ServicioGestorInterface;
+import es.uned.common.User;
 
 // clase que implementa la interfaz remota ServicioGestorInterface
 // Servicio Gestor: Este servicio se encarga de gestionar todas las operaciones de los usuarios en relación 
@@ -25,6 +27,11 @@ public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioG
 	public boolean dejarDeSeguir(String miNick, String suNick) throws RemoteException {
 		
 		return Servidor.unFollowUsuario(miNick, suNick);
+	}
+	
+	public HashMap<String, User> mostrarUsuarios() throws RemoteException {
+		
+		return Servidor.enviarRegistrados();
 	}
 	
 
