@@ -17,10 +17,8 @@ public class Basededatos {
 	static String URLDatos = "rmi://localhost:"+ puerto + "/Datos";
 	
 	public static void main(String[] args) {
-
 		
-		try {
-			
+		try {			
 			// ENLCADE CON SERVICIOS GESTOR Y AUTENTICADOR
 			arrancarRegistro(puerto);			
 			// Crea un objeto de la clase impl que implementa la interfaz remota

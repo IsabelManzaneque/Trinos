@@ -6,6 +6,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 import es.uned.common.ServicioDatosInterface;
+import es.uned.common.User;
 
 
 //La entidad Servidor se encarga de controlar el proceso de autenticación de
@@ -129,9 +130,9 @@ public class Servidor {
 		
 	}
 	
-	public static boolean addNuevo(String nick, String password) throws RemoteException {
+	public static boolean addNuevo(String nick, User user) throws RemoteException {
 		
-		return datos.agregarUsuario(nick, password);
+		return datos.agregarUsuario(nick, user);
 		
 	}
 	

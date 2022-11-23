@@ -8,6 +8,7 @@ import java.util.Scanner;
 import es.uned.common.ServicioAutenticacionInterface;
 import es.uned.common.ServicioDatosInterface;
 import es.uned.common.ServicioGestorInterface;
+import es.uned.common.User;
 
 
 
@@ -135,15 +136,17 @@ public class Usuario {
 
 	private static void register() {
 		Scanner scanner = new Scanner(System.in); 		
-	
+		
+		System.out.print("Introduzca su nombre: ");
+	    String name = scanner.nextLine().trim().toLowerCase();
 		System.out.print("Introduzca su nick: ");
 	    String nick = scanner.nextLine().trim().toLowerCase();
 	    System.out.print("Introduzca su password: ");
 	    String password = scanner.nextLine().trim().toLowerCase();
-	     
+	    
 	    
 	    try {
-			if(autenticador.registrar(nick, password)) {
+			if(autenticador.registrar(nick, new User(name, nick, password))) {
 				System.out.println("Se ha registrado correctamente");	    	
 			}else {
 				System.out.println("Ya existe un usuario con ese nick");
@@ -217,7 +220,7 @@ public class Usuario {
 			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
-		}  
+		}   
 	}
 		
 	

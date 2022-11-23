@@ -9,7 +9,6 @@ public interface ServicioGestorInterface extends Remote{
 	
 	public boolean seguir(String miNick, String suNick) throws RemoteException; 
 	
-	public boolean dejarDeSeguir(String miNick, String suNick) throws RemoteException; 
-	
+	public boolean dejarDeSeguir(String miNick, String suNick) throws RemoteException; 	
 	
 }

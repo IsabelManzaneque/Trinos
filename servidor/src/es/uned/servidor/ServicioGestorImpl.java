@@ -27,8 +27,5 @@ public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioG
 		return Servidor.unFollowUsuario(miNick, suNick);
 	}
 	
-	
-	
-	
 
 }
