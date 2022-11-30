@@ -94,10 +94,10 @@ public class Servidor {
                    	System.out.println("\tServicios activos: \n\t- " + URLGestor + "\n\t- " + URLAutenticador);
                     break;
                 case "2":
-                	mostrarUsuarios(datos.getUsuariosRegistrados());
+                	mostrarUsuarios(datos.getUsuariosRegistrados(), "registrados");
                     break;
                 case "3":
-                	mostrarUsuarios(datos.getUsuariosConectados());
+                	mostrarUsuarios(datos.getUsuariosConectados(), "conectados");
                     break;
                 case "4":
                 	System.out.print("wow 4");
@@ -116,28 +116,16 @@ public class Servidor {
 		
 	}
 	
-	public static boolean addNuevo(String nick, User user) throws RemoteException {
-		
-		return datos.agregarUsuario(nick, user);
-		
+	//  PODRIA HACER UNA FUNCION QUE DEVOLVIERA datos Y IMPLEMENTAR ESTO EN LAS CLASES IMPL??
+	
+	public static ServicioDatosInterface getDatos() {
+		return datos;
 	}
 	
-	public static boolean addConectado(String nick, String password) throws RemoteException {
-		
-		return datos.agregarConectado(nick, password);
-			
-	}
-	
-	public static void deleteConectado(String nick) throws RemoteException {
-		
-		datos.borrarConectado(nick);
-			
-	}
-	
-	public static void mostrarUsuarios(HashMap<String, User> map) throws RemoteException {
+	public static void mostrarUsuarios(HashMap<String, User> map, String status) throws RemoteException {
 		
 		if(map.isEmpty()) {
-			System.out.println("No hay usuarios registrados");
+			System.out.println("No hay usuarios " + status);
 		}else {
 			map.forEach((k, v) ->
 			{			
@@ -146,22 +134,41 @@ public class Servidor {
 		}		
 	}
 	
-	public static HashMap<String, User> enviarRegistrados() throws RemoteException{
-		
-		return datos.getUsuariosRegistrados();
-	}
+//	public static boolean addNuevo(String nick, User user) throws RemoteException {
+//		
+//		return datos.agregarUsuario(nick, user);
+//		
+//	}
+	
+//	public static boolean addConectado(String nick, String password) throws RemoteException {
+//		
+//		return datos.agregarConectado(nick, password);
+//			
+//	}
+	
+//	public static void deleteConectado(String nick) throws RemoteException {
+//		
+//		datos.borrarConectado(nick);
+//			
+//	}
 	
 	
-	public static boolean followUsuario(String miNick, String suNick) throws RemoteException {
-		
-		return datos.agregarContacto(miNick, suNick);	
-			
-	}
+//	public static HashMap<String, User> enviarRegistrados() throws RemoteException{
+//		
+//		return datos.getUsuariosRegistrados();
+//	}
 	
-	public static boolean unFollowUsuario(String miNick, String suNick) throws RemoteException {
-		
-		return datos.borrarContacto(miNick, suNick);	
-			
-	}
+	
+//	public static boolean followUsuario(String miNick, String suNick) throws RemoteException {
+//		
+//		return datos.agregarContacto(miNick, suNick);	
+//			
+//	}
+	
+//	public static boolean unFollowUsuario(String miNick, String suNick) throws RemoteException {
+//		
+//		return datos.borrarContacto(miNick, suNick);	
+//			
+//	}
 
 }

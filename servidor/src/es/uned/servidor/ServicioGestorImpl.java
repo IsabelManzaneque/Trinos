@@ -21,17 +21,20 @@ public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioG
 
 	public boolean seguir(String miNick, String suNick) throws RemoteException {
 		
-		return Servidor.followUsuario(miNick, suNick);
+		return Servidor.getDatos().agregarContacto(miNick, suNick);		
+		//return Servidor.followUsuario(miNick, suNick);
 	}
 
 	public boolean dejarDeSeguir(String miNick, String suNick) throws RemoteException {
 		
-		return Servidor.unFollowUsuario(miNick, suNick);
+		return Servidor.getDatos().borrarContacto(miNick, suNick);	
+		//return Servidor.unFollowUsuario(miNick, suNick);
 	}
 	
 	public HashMap<String, User> mostrarUsuarios() throws RemoteException {
 		
-		return Servidor.enviarRegistrados();
+		return Servidor.getDatos().getUsuariosRegistrados();
+		//return Servidor.enviarRegistrados();
 	}
 	
 

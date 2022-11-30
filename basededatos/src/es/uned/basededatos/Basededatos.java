@@ -6,15 +6,13 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 
-// Clase que contiene el main de la entidad Base de Datos.
-//Base de datos: Esta entidad es la encargada de almacenar todos los datos del sistema:
-//Usuarios, Seguidores, Trinos, ...; Sólo la entidad Servidor puede consumir el servicio
-//que suministra esta entidad
+// Clase que contiene el main de la entidad Base de Datos. Levanta la base de datos
+
 public class Basededatos {	
 	
-	static int puerto = 5555;
+	private static int puerto = 5555;
 	// Crea una URL para los objetos remotos de los cuales utilizara metodos
-	static String URLDatos = "rmi://localhost:"+ puerto + "/Datos";
+	private static String URLDatos = "rmi://localhost:"+ puerto + "/Datos";
 	
 	public static void main(String[] args) {
 		
@@ -73,7 +71,7 @@ public class Basededatos {
                 	System.out.println("\tUsuarios conectados: \n\t- " + datos.getUsuariosConectados().size());
                     break;
                 case "2":
-                	System.out.print("wow 2");
+                	datos.mostrarTrinos();
                     break;
                 case "3":
                     key.close();

@@ -11,10 +11,9 @@ import es.uned.common.ServicioDatosInterface;
 
 // Servicio Datos: Este servicio hará las funciones de una “base de datos” que relacione Usuarios-Seguidores-Trinos.
 // Es decir, mantendrá la lista de usuarios registrados y/o conectados al sistema, junto con sus seguidores y trinos; 
-// y los relacionará permitiendo operaciones típicas de consulta, añadir y borrado.
-// Además, también debe posibilitar la operación de bloqueo de una cuenta (banear). Los dos servicios anteriores 
-// (Servicio Autenticación y Servicio Gestor) harán uso de este servicio para realizar las operaciones sobre el estado 
-// de los usuarios del sistema y sus seguidores.
+// y los relacionará permitiendo operaciones típicas de consulta, añadir y borrado. También debe posibilitar la operación 
+// de bloqueo de una cuenta (banear). (Servicio Autenticación y Servicio Gestor) harán uso de este servicio para realizar 
+// las operaciones sobre el estado  de los usuarios del sistema y sus seguidores.
 // El equipo docente recomienda para la implementación del servicio las clases List y HashMap de Java.
 
 //Los metodos remotos para autenticarse y registrarse los debe tener la clase impl de la base de datos
@@ -82,16 +81,28 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 			contactos.get(miNick).remove(usuariosRegistrados.get(suNick));        
 			return true;
 		}
-		return false;
-		
+		return false;		
 	}		
 
 	
-
-	@Override
 	public void banearUsuario() throws RemoteException {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void mostrarTrinos() throws RemoteException{
+		if(trinos.isEmpty()) {
+			System.out.println("No hay trinos en la base de datos");
+		}else {
+			trinos.forEach((k, v) ->
+			{			
+			    System.out.println("Usuario: " + k + "  Trinos (timestamp):");	  
+			    
+			    for(Trino t : v) {
+			    	System.out.println("	- " + t.GetTimestamp());	
+			    }
+		    });		
+		}		
 	}
 
 	@Override

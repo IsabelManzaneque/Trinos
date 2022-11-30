@@ -23,17 +23,20 @@ public class ServicioAutenticacionImpl extends UnicastRemoteObject implements Se
 
 	public boolean registrar(String nick, User user) throws RemoteException {	
 		
-		return Servidor.addNuevo(nick, user);			
+		return Servidor.getDatos().agregarUsuario(nick, user);
+		//return Servidor.addNuevo(nick, user);			
 	}	
 
 	public boolean autenticar(String nick, String password) throws RemoteException {
 		
-		return Servidor.addConectado(nick, password);
+		return Servidor.getDatos().agregarConectado(nick, password);
+		//return Servidor.addConectado(nick, password);
 	}
 	
 	public void desconectar(String nick) throws RemoteException {	
 		
-		Servidor.deleteConectado(nick);		
+		Servidor.getDatos().borrarConectado(nick);
+		//Servidor.deleteConectado(nick);		
 	}
 			
 				
