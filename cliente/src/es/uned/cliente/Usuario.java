@@ -5,9 +5,11 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
+import es.uned.common.CallbackUsuarioInterface;
 import es.uned.common.ServicioAutenticacionInterface;
 import es.uned.common.ServicioDatosInterface;
 import es.uned.common.ServicioGestorInterface;
+import es.uned.common.Trino;
 import es.uned.common.User;
 
 
@@ -28,7 +30,6 @@ public class Usuario {
 	// Crea una URL para los objetos remotos de los cuales utilizara metodos
 	static String URLGestor = "rmi://localhost:" + puerto + "/Gestor";
 	static String URLAutenticador = "rmi://localhost:" + puerto + "/Autenticador";
-	
 	static ServicioGestorInterface gestor;
 	static ServicioAutenticacionInterface autenticador;
 	
@@ -36,12 +37,26 @@ public class Usuario {
 					
 		try {			 
 			 
-			 // ENLCADE CON SERVIDOR: SERVICIOS GESTOR Y AUTENTICADOR 			 
+			 // ENLCADE CON SERVIDOR: SERVICIOS GESTOR, AUTENTICADOR y CALLBACK		 
 			 // Busqueda de los objetos remotos y cast del objeto de la interfaz
 			 gestor = (ServicioGestorInterface)Naming.lookup(URLGestor);
-			 autenticador = (ServicioAutenticacionInterface)Naming.lookup(URLAutenticador);			 
-			 System.out.println("Busqueda de gestor y autenticador completa");			
+			 autenticador = (ServicioAutenticacionInterface)Naming.lookup(URLAutenticador);		
+				 
+			 System.out.println("Busqueda de gestor, autenticador y callback completa");				 
+			 System.out.println("El servidor dice " + gestor.decirHola());
 			 
+			 CallbackUsuarioInterface objCallback = new CallbackUsuarioImpl();
+			 
+			 // registrar para callback
+			 gestor.registrarCallback(objCallback);
+			 System.out.println("Registrado para callback.");
+			 try {
+				 Thread.sleep(10*1000);
+			 }catch (InterruptedException exc) { // sobre el método sleep
+				 gestor.eliminarRegistroCallback(objCallback);
+				 System.out.println("No registrado para callback.");
+
+			 }			 
 			 mainMenu();
 			 
 		 } catch (Exception e) {
@@ -132,9 +147,8 @@ public class Usuario {
 	}
 	
 	
-	// LA INFO PERSONAL ES NOMBRE< NICK (ID) Y PASSWORD
 
-	private static void register() {
+	private static void register() throws RemoteException {
 		Scanner scanner = new Scanner(System.in); 		
 		
 		System.out.print("Introduzca su nombre: ");
@@ -142,42 +156,29 @@ public class Usuario {
 		System.out.print("Introduzca su nick: ");
 	    String nick = scanner.nextLine().trim().toLowerCase();
 	    System.out.print("Introduzca su password: ");
-	    String password = scanner.nextLine().trim().toLowerCase();
+	    String password = scanner.nextLine().trim().toLowerCase();    
 	    
-	    
-	    try {
-			if(autenticador.registrar(nick, new User(name, nick, password))) {
-				System.out.println("Se ha registrado correctamente");	    	
-			}else {
-				System.out.println("Ya existe un usuario con ese nick");
-			}
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}   
-		
+		if(autenticador.registrar(nick, new User(name, nick, password))) {
+			System.out.println("Se ha registrado correctamente");	    	
+		}else {
+			System.out.println("Ya existe un usuario con ese nick");
+		}	
 	}
 	
-	private static void login() {
+	private static void login() throws RemoteException {
 		
 		Scanner scanner = new Scanner(System.in); 		
 		
 		System.out.print("Introduzca su nick: ");
 	    String nick = scanner.nextLine().trim().toLowerCase();
 	    System.out.print("Introduzca su password: ");
-	    String password = scanner.nextLine().trim().toLowerCase();
-	    
-	    
-	    try {
-			if(autenticador.autenticar(nick, password)) {
-				userMenu(nick);
-			}else {
-				System.out.println("No se encuentra usuario con ese nick / password");
-			}
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  		
+	    String password = scanner.nextLine().trim().toLowerCase();  
+	    	   
+		if(autenticador.autenticar(nick, password)) {
+			userMenu(nick);
+		}else {
+			System.out.println("No se encuentra usuario con ese nick / password");
+		}			
 	}
 	
 	
@@ -194,50 +195,52 @@ public class Usuario {
 	}
 	
 	
-	private static void follow(String miNick) {
+	private static void follow(String miNick) throws RemoteException {
 		
 		Scanner scanner = new Scanner(System.in); 		
 		
 		System.out.print("Introduzca nick de usuario que quiere seguir: ");
 	    String suNick = scanner.nextLine().trim().toLowerCase();
-		       
-	    try {
-			if(gestor.seguir(miNick, suNick)) {
-				System.out.println("Se ha comenzado a seguir al usuario");
-			}else {
-				System.out.println("No se encuentra usuario con ese nick");
-			}
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}  
+		           
+		if(gestor.seguir(miNick, suNick)) {
+			System.out.println("Se ha comenzado a seguir al usuario");
+		}else {
+			System.out.println("No se encuentra usuario con ese nick");
+		}
 	}
 	
-	private static void unfollow(String miNick) {
+	private static void unfollow(String miNick) throws RemoteException {
 		
         Scanner scanner = new Scanner(System.in); 		
 		
 		System.out.print("Introduzca nick de usuario que quiere dejar de seguir: ");
 	    String suNick = scanner.nextLine().trim().toLowerCase();
-		       
-	    try {
-			if(gestor.dejarDeSeguir(miNick, suNick)) {
-				System.out.println("Se ha dejado de seguir al usuario");
-			}else {
-				System.out.println("El usuario no esta en su lista de contactos");
-			}
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}   
-	}
-		
+		       	    
+		if(gestor.dejarDeSeguir(miNick, suNick)) {
+			System.out.println("Se ha dejado de seguir al usuario");
+		}else {
+			System.out.println("El usuario no esta en su lista de contactos");
+		}		   
+	}		
 	
 	
-	private static void enviarTrino() {
+	private static void sendTrino(String miNick) throws RemoteException {
 		
+		Scanner scanner = new Scanner(System.in); 
+		
+	    System.out.print("Escriba su trino: ");
+	    String mensaje = scanner.nextLine().trim();
+	    
+	    Trino trino = new Trino(miNick, mensaje);
+	    
+	    if(gestor.enviarTrino(trino)) {
+	    	System.out.print("El trino se ha enviado con éxito");
+	    }else {
+	    	System.out.print("Error al enviar trino");
+	    }
 	}
 
 }	
-
 
 
 
@@ -260,17 +263,5 @@ public class Usuario {
 //		servidor.limpiarBuffer(miSesion);
 //	}
 //	
-//	
-//	private static void enviarMensaje() throws RemoteException {
-//		String opts[] = Gui.input("Enviar Mensaje", 
-//								  new String[]{ "Ingrese la sesion del contacto: ",
-//												"Ingrese el mensaje: "});
-//		
-//		int suSesion = Integer.parseInt(opts[0]);
-//		String mensaje = opts[1];
-//		
-//		//lamada remota al servidor para enviar el mensaje desde mi sesion
-//		// a la del receptor
-//		servidor.enviar(mensaje, miSesion, suSesion);
-//	}
-//}
+
+

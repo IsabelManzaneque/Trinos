@@ -20,14 +20,14 @@ import es.uned.common.User;
 public class Servidor {
 
 	
-	static int puertoSalida = 8888;	
-	static int puertoEntrada = 5555;
+	private static int puertoSalida = 8888;	
+	private static int puertoEntrada = 5555;
 	// Crea una URL para los objetos remotos de los cuales utilizara metodos
-	static String URLGestor = "rmi://localhost:"+ puertoSalida + "/Gestor";
-	static String URLAutenticador = "rmi://localhost:"+ puertoSalida + "/Autenticador";
-	static String URLDatos = "rmi://localhost:" + puertoEntrada + "/Datos";
+	private static String URLGestor = "rmi://localhost:"+ puertoSalida + "/Gestor";
+	private static String URLAutenticador = "rmi://localhost:"+ puertoSalida + "/Autenticador";
+	private static String URLDatos = "rmi://localhost:" + puertoEntrada + "/Datos";
 	
-	static ServicioDatosInterface datos;
+	private static ServicioDatosInterface datos;
 	
 	public static void main(String[] args) throws Exception {		
 		
@@ -116,7 +116,6 @@ public class Servidor {
 		
 	}
 	
-	//  PODRIA HACER UNA FUNCION QUE DEVOLVIERA datos Y IMPLEMENTAR ESTO EN LAS CLASES IMPL??
 	
 	public static ServicioDatosInterface getDatos() {
 		return datos;
@@ -134,41 +133,4 @@ public class Servidor {
 		}		
 	}
 	
-//	public static boolean addNuevo(String nick, User user) throws RemoteException {
-//		
-//		return datos.agregarUsuario(nick, user);
-//		
-//	}
-	
-//	public static boolean addConectado(String nick, String password) throws RemoteException {
-//		
-//		return datos.agregarConectado(nick, password);
-//			
-//	}
-	
-//	public static void deleteConectado(String nick) throws RemoteException {
-//		
-//		datos.borrarConectado(nick);
-//			
-//	}
-	
-	
-//	public static HashMap<String, User> enviarRegistrados() throws RemoteException{
-//		
-//		return datos.getUsuariosRegistrados();
-//	}
-	
-	
-//	public static boolean followUsuario(String miNick, String suNick) throws RemoteException {
-//		
-//		return datos.agregarContacto(miNick, suNick);	
-//			
-//	}
-	
-//	public static boolean unFollowUsuario(String miNick, String suNick) throws RemoteException {
-//		
-//		return datos.borrarContacto(miNick, suNick);	
-//			
-//	}
-
 }

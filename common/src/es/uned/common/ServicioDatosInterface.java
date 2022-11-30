@@ -25,7 +25,7 @@ public interface ServicioDatosInterface extends Remote{
 	
 	public void mostrarTrinos() throws RemoteException;
 	
-	public void agregarTrino(Trino trino) throws RemoteException;
+	public boolean agregarTrino(Trino trino) throws RemoteException;
 	
 	public void borrarTrino(Trino trino) throws RemoteException;
 	

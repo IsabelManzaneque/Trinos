@@ -26,12 +26,12 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 
 	private HashMap<String, User> usuariosRegistrados = new HashMap<>();	
 	private HashMap<String, User> usuariosConectados = new HashMap<>();	
-	// mapa donde key es el usuario y value su lista de trinos 
-	private HashMap<String, ArrayList<Trino>> trinos = new HashMap<>();
 	// mapa donde key es un usuario y value su lista de contactos
 	private HashMap<String, ArrayList<User>> contactos = new HashMap<>();
+	// mapa donde key es el usuario y value su lista de trinos 
+	private HashMap<String, ArrayList<Trino>> trinos = new HashMap<>();
 	// mapa con el usuario pendiente de recibir mensajes y una lista de los mensajes pendientes
-	private HashMap<String, ArrayList<Trino>> buffer = new HashMap<>();	
+	private HashMap<String, ArrayList<Trino>> trinosPendientes = new HashMap<>();	
 	
 
 	
@@ -105,19 +105,23 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		}		
 	}
 
-	@Override
-	public void agregarTrino(Trino trino) throws RemoteException {
-		// TODO Auto-generated method stub
+	
+	public boolean agregarTrino(Trino trino) throws RemoteException {
+		
+		//el trino lo deben recibir todos los contactos del emisor 
+		//los que esten online, automaticamente
+		//los que no, cuando se conecten
+		return true;
 		
 	}
 
-	@Override
+	
 	public void borrarTrino(Trino trino) throws RemoteException {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
-	@Override
+	
 	public void limpiarBuffer(String name) throws RemoteException {
 		
 		// comprueba que la sesion es valida
@@ -125,7 +129,7 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 			throw new RuntimeException("no exite el usuario");
 		}
 		// si lo es, borra todos los elementos de la lista
-		buffer.get(name).clear();
+		trinosPendientes.get(name).clear();
 		
 	}
 	
