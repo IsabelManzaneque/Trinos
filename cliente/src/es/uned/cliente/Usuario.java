@@ -26,37 +26,28 @@ import es.uned.common.User;
 
 public class Usuario {
 	
-	static int puerto = 8888;	
+	private static int puerto = 8888;	
 	// Crea una URL para los objetos remotos de los cuales utilizara metodos
-	static String URLGestor = "rmi://localhost:" + puerto + "/Gestor";
-	static String URLAutenticador = "rmi://localhost:" + puerto + "/Autenticador";
-	static ServicioGestorInterface gestor;
-	static ServicioAutenticacionInterface autenticador;
+	private static String URLGestor = "rmi://localhost:" + puerto + "/Gestor";
+	private static String URLAutenticador = "rmi://localhost:" + puerto + "/Autenticador";
+	private static ServicioGestorInterface gestor;
+	private static ServicioAutenticacionInterface autenticador;
+	private static CallbackUsuarioInterface objCallback;
 	
 	public static void main(String[] args){		
 					
 		try {			 
 			 
-			 // ENLCADE CON SERVIDOR: SERVICIOS GESTOR, AUTENTICADOR y CALLBACK		 
+			 // ENLCADE CON SERVIDOR: SERVICIOS GESTOR y AUTENTICADOR	 
 			 // Busqueda de los objetos remotos y cast del objeto de la interfaz
 			 gestor = (ServicioGestorInterface)Naming.lookup(URLGestor);
 			 autenticador = (ServicioAutenticacionInterface)Naming.lookup(URLAutenticador);		
-				 
-			 System.out.println("Busqueda de gestor, autenticador y callback completa");				 
-			 System.out.println("El servidor dice " + gestor.decirHola());
+			 objCallback = new CallbackUsuarioImpl();
 			 
-			 CallbackUsuarioInterface objCallback = new CallbackUsuarioImpl();
-			 
-			 // registrar para callback
-			 gestor.registrarCallback(objCallback);
-			 System.out.println("Registrado para callback.");
-			 try {
-				 Thread.sleep(10*1000);
-			 }catch (InterruptedException exc) { // sobre el método sleep
-				 gestor.eliminarRegistroCallback(objCallback);
-				 System.out.println("No registrado para callback.");
-
-			 }			 
+//			 // registrar para callback
+//			 gestor.registrarCallback(objCallback);
+//			 System.out.println("Registrado para callback.");
+	 
 			 mainMenu();
 			 
 		 } catch (Exception e) {
@@ -88,7 +79,7 @@ public class Usuario {
                     break;           
                 case "3":
                     key.close();
-                    System.out.print("\nCerrando cliente...\n");
+                    System.out.print("\nCerrando cliente...\n");                    
                     System.exit(1);
                 default: 
                     System.out.print("\nInserte una opcion valida");    
@@ -120,7 +111,7 @@ public class Usuario {
                    	System.out.println("\tServicios activos: \n\t- " + URLGestor + "\n\t- " + URLAutenticador);
                     break;
                 case "2":
-                	System.out.print("wow 2");
+                	sendTrino(nick);
                     break;
                 case "3":
                 	listarUsuarios();
@@ -137,6 +128,7 @@ public class Usuario {
                 case "7":
                     scanner.close();
                     autenticador.desconectar(nick);
+                    gestor.eliminarRegistroCallback(objCallback);
                     System.out.print("\nCerrando cliente...\n");
                     System.exit(1);
                 default: 
@@ -174,7 +166,11 @@ public class Usuario {
 	    System.out.print("Introduzca su password: ");
 	    String password = scanner.nextLine().trim().toLowerCase();  
 	    	   
-		if(autenticador.autenticar(nick, password)) {
+		if(autenticador.autenticar(nick, password)) {			
+			// registrar para callback
+			gestor.registrarCallback(objCallback);
+			System.out.println("Registrado para callback.");
+			// acceder a menu de usuario
 			userMenu(nick);
 		}else {
 			System.out.println("No se encuentra usuario con ese nick / password");

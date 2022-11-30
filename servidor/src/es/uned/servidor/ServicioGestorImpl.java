@@ -16,10 +16,30 @@ import es.uned.common.User;
 // usuario, el primero recibe automáticamente los trinos del segundo cuando los publica. 
 
 public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioGestorInterface{	
-
+	
+	private Vector<CallbackUsuarioInterface> listaClientes = new Vector<>();
 
 	protected ServicioGestorImpl() throws RemoteException {
 		super();		
+	}
+	
+	public void registrarCallback(CallbackUsuarioInterface objCallbackCliente)throws RemoteException {
+		 // almacena el objeto callback en el vector
+		 if (!(listaClientes.contains(objCallbackCliente))) {
+			 listaClientes.addElement(objCallbackCliente);
+		 }
+	}
+	
+	// Este método remoto permite a un cliente de objeto cancelar su registro para callback
+	// @param id es un identificador para el cliente; el servidor lo utiliza únicamente para identificar al cliente	registrado.
+	
+	public synchronized void eliminarRegistroCallback(CallbackUsuarioInterface objCallbackCliente)throws RemoteException{
+		
+		if (listaClientes.removeElement(objCallbackCliente)){
+			System.out.println("Se elimino callback de cliente, activos: " + listaClientes.size());
+		 } else {
+			 System.out.println("eliminarRegistro: el cliente no fue registrado.");				
+		}		
 	}
 
 	public boolean seguir(String miNick, String suNick) throws RemoteException {
@@ -42,56 +62,38 @@ public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioG
 	
 	public boolean enviarTrino(Trino trino) throws RemoteException{
 		
+		hacerCallbacks(trino);
 		return Servidor.getDatos().agregarTrino(trino);
-	}
+	}	
 	
-	
-	// COSAS CALLBACK
-	
-	private Vector listaClientes = new Vector();
-	
-	public String decirHola()throws java.rmi.RemoteException {
-		return("Hola Mundo");
-	}
-	
-	public void registrarCallback(CallbackUsuarioInterface objCallbackCliente)throws RemoteException {
-		 // almacena el objeto callback en el vector
-		 if (!(listaClientes.contains(objCallbackCliente))) {
-			 listaClientes.addElement(objCallbackCliente);
-			 System.out.println("Nuevo cliente registrado ");
-			 hacerCallbacks();
-
-		 }
-	}
-	
-	// Este método remoto permite a un cliente de objeto cancelar su registro para callback
-	// @param id es un identificador para el cliente; el servidor lo utiliza únicamente para identificar al cliente	registrado.
-	
-	public synchronized void eliminarRegistroCallback(CallbackUsuarioInterface objCallbackCliente)throws RemoteException{
+	private synchronized void hacerCallbacks(Trino trino) throws RemoteException {
 		
-		if (listaClientes.removeElement(objCallbackCliente)){
-			System.out.println("Cliente no registrado ");
-		 } else {
-			 System.out.println("eliminarRegistro: el cliente no fue registrado.");
-					
-		}		
-	}
-	
-	 private synchronized void hacerCallbacks() throws RemoteException {
-		 // realizar callback de un cliente registrado
-		 System.out.println("\n**************************************\n" +"Callback iniciado –- ");
-		 
-		 for (int i=0; i<listaClientes.size(); i++) {
-			 System.out.println("haciendo callback número"+ i +"\n");
-			 // convertir el objeto vector a un objeto callback
+		
+		for (int i=0; i<listaClientes.size(); i++) {
+			 
 			 CallbackUsuarioInterface proxCliente = (CallbackUsuarioInterface) listaClientes.elementAt(i);
 			 // invocar el método de callback
-			 proxCliente.notificame("Número de clientes registrados=" + listaClientes.size());
-		 }
+			 proxCliente.notificame(trino);
+		}
+		
+		 // realizar callback de un cliente registrado
+//		 System.out.println("\n**************************************\n" +"Callback iniciado –- ");
+//		 
+//		 for (int i=0; i<listaClientes.size(); i++) {
+//			 System.out.println("haciendo callback número "+ (i+1) +"\n");
+//			 // convertir el objeto vector a un objeto callback
+//			 CallbackUsuarioInterface proxCliente = (CallbackUsuarioInterface) listaClientes.elementAt(i);
+//			 // invocar el método de callback
+//			 proxCliente.notificame("Número de clientes registrados=" + listaClientes.size());
+//		 }
+//		 
+//		 System.out.println("**************************************\n" + "Servidor completo callbacks –-");
 		 
-		 System.out.println("**************************************\n" + "Servidor completo callbacks –-");
+
+		 
+		 
+		 
 	 }
-	
 	
 	
 }

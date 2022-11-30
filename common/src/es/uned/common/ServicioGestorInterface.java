@@ -27,6 +27,5 @@ public interface ServicioGestorInterface extends Remote{
 	public void eliminarRegistroCallback(CallbackUsuarioInterface objCallbackCliente) throws RemoteException;
 			
 	
-	public String decirHola() throws java.rmi.RemoteException;
 	
 }
