@@ -6,6 +6,7 @@ import java.util.*;
 
 import es.uned.common.Trino;
 import es.uned.common.User;
+import es.uned.common.CallbackUsuarioInterface;
 import es.uned.common.ServicioDatosInterface;
 
 
@@ -30,10 +31,11 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 	private HashMap<String, ArrayList<User>> contactos = new HashMap<>();
 	// mapa donde key es un usuario y value su lista de seguidores
 	private HashMap<String, ArrayList<User>> seguidores = new HashMap<>();
-	// array de todos los trinos de todos los usuarios 
-	private ArrayList<Trino> trinos = new ArrayList<>();
 	// mapa con el usuario pendiente de recibir mensajes y una lista de los mensajes pendientes
 	private HashMap<String, ArrayList<Trino>> trinosPendientes = new HashMap<>();	
+	// array con todos los trinos de todos los usuarios 
+	private ArrayList<Trino> trinos = new ArrayList<>();
+	
 	
 
 	
@@ -55,17 +57,20 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		usuariosRegistrados.remove(nick);
 	}
 	
-	public boolean agregarConectado(String nick, String password) throws RemoteException {
+	public boolean agregarConectado(String nick, String password, CallbackUsuarioInterface objCallback) throws RemoteException {
 		
-		if(!usuariosRegistrados.containsKey(nick) || !usuariosRegistrados.get(nick).getPassword().equals(password)) {
+		if(!usuariosRegistrados.containsKey(nick) || !usuariosRegistrados.get(nick).getPassword().equals(password) 
+		    || usuariosConectados.containsKey(nick)) {
 			return false;
-		}
+		}		
 		usuariosConectados.put(nick, usuariosRegistrados.get(nick));
+		usuariosConectados.get(nick).setObjCallback(objCallback);
 		return true;
 	}
 	
 	public void borrarConectado(String nick) throws RemoteException {
 		
+		usuariosConectados.get(nick).setObjCallback(null);
 		usuariosConectados.remove(nick);
 	}
 	
@@ -127,11 +132,9 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 	}
 
 	
-	public void limpiarBuffer(String nick) throws RemoteException {
-		
+	public void limpiarBuffer(String nick) throws RemoteException {		
 
-		trinosPendientes.get(nick).clear();
-		
+		trinosPendientes.get(nick).clear();		
 	}
 	
 	public HashMap<String, User> getUsuariosRegistrados() throws RemoteException {

@@ -21,16 +21,5 @@ public interface ServicioGestorInterface extends Remote{
 	
 	public void borrarPendientes(String nick) throws RemoteException;
 	
-	
-	// COSAS CALLBACK
-	
-//	// Este método remoto permite a un cliente de objeto registrarse para callback. @param objClienteCallback es 
-//	// una referencia al cliente de objeto; el servidor lo utiliza para realizar los callbacks
-//	public void registrarCallback(CallbackUsuarioInterface objCallbackCliente)  throws RemoteException;
-//	
-//	// Este método remoto permite a un cliente de objeto cancelar su registro para callback
-//	public void eliminarRegistroCallback(CallbackUsuarioInterface objCallbackCliente) throws RemoteException;
-			
-	
-	
+		
 }

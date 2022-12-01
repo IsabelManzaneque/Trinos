@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import es.uned.common.CallbackUsuarioInterface;
 import es.uned.common.ServicioAutenticacionInterface;
 import es.uned.common.User;
 
@@ -27,9 +28,9 @@ public class ServicioAutenticacionImpl extends UnicastRemoteObject implements Se
 		
 	}	
 
-	public boolean autenticar(String nick, String password) throws RemoteException {
+	public boolean autenticar(String nick, String password, CallbackUsuarioInterface objCallback) throws RemoteException {
 		
-		return Servidor.getDatos().agregarConectado(nick, password);
+		return Servidor.getDatos().agregarConectado(nick, password, objCallback);
 	
 	}
 	

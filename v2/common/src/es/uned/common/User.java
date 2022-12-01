@@ -10,11 +10,10 @@ public class User implements Serializable{
 	private String password;
 	private CallbackUsuarioInterface objCallback;
 	
-	public User(String name, String nick, String password, CallbackUsuarioInterface objCallback) {
+	public User(String name, String nick, String password) {
 		this.name = name;
 		this.nick = nick;
-		this.password = password;	
-		this.objCallback = objCallback;
+		this.password = password;			
 	}
 
 	public String getNick() {
@@ -29,9 +28,9 @@ public class User implements Serializable{
 		return password;
 	}
 	
-//	public void setObjCallback(CallbackUsuarioInterface objCallback) {
-//		this.objCallback = objCallback;
-//	}
+	public void setObjCallback(CallbackUsuarioInterface objCallback) {
+		this.objCallback = objCallback;
+	}
 	
 	public CallbackUsuarioInterface getObjCallback() {
 		return objCallback;

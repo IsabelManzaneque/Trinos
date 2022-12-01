@@ -13,7 +13,7 @@ public interface ServicioDatosInterface extends Remote{
 	
 	public void borrarUsuario(String nick) throws RemoteException;
 	
-	public boolean agregarConectado(String nick, String password) throws RemoteException;
+	public boolean agregarConectado(String nick, String password, CallbackUsuarioInterface objCallback) throws RemoteException;
 	
 	public void borrarConectado(String nick) throws RemoteException;
 	

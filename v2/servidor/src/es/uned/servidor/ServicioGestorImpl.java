@@ -24,24 +24,6 @@ public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioG
 		super();		
 	}
 	
-//	public void registrarCallback(CallbackUsuarioInterface objCallbackCliente)throws RemoteException {
-//		 // almacena el objeto callback en el vector
-//		 if (!(listaClientes.contains(objCallbackCliente))) {
-//			 listaClientes.addElement(objCallbackCliente);
-//		 }
-//	}
-//	
-//	// Este método remoto permite a un cliente de objeto cancelar su registro para callback
-//	// @param id es un identificador para el cliente; el servidor lo utiliza únicamente para identificar al cliente	registrado.
-//	
-//	public synchronized void eliminarRegistroCallback(CallbackUsuarioInterface objCallbackCliente)throws RemoteException{
-//		
-//		if (listaClientes.removeElement(objCallbackCliente)){
-//			System.out.println("Se elimino callback de cliente, activos: " + listaClientes.size());
-//		 } else {
-//			 System.out.println("eliminarRegistro: el cliente no fue registrado.");				
-//		}		
-//	}
 
 	public boolean seguir(String miNick, String suNick) throws RemoteException {
 		
@@ -90,26 +72,8 @@ public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioG
 				Servidor.getDatos().agregarTrinoPendiente(u.getNick(), trino);
 			}
 		}	
-		
-		
-		 // realizar callback de un cliente registrado
-//		 System.out.println("\n**************************************\n" +"Callback iniciado –- ");
-//		 
-//		 for (int i=0; i<listaClientes.size(); i++) {
-//			 System.out.println("haciendo callback número "+ (i+1) +"\n");
-//			 // convertir el objeto vector a un objeto callback
-//			 CallbackUsuarioInterface proxCliente = (CallbackUsuarioInterface) listaClientes.elementAt(i);
-//			 // invocar el método de callback
-//			 proxCliente.notificame("Número de clientes registrados=" + listaClientes.size());
-//		 }
-//		 
-//		 System.out.println("**************************************\n" + "Servidor completo callbacks –-");
-		 
-
-		 
-		 
-		 
 	 }
+	
 	
 	
 }

@@ -33,7 +33,6 @@ public class Usuario {
 	private static String URLAutenticador = "rmi://localhost:" + puerto + "/Autenticador";
 	private static ServicioGestorInterface gestor;
 	private static ServicioAutenticacionInterface autenticador;
-	//private static CallbackUsuarioInterface objCallback;
 	
 	public static void main(String[] args){		
 					
@@ -43,11 +42,6 @@ public class Usuario {
 			 // Busqueda de los objetos remotos y cast del objeto de la interfaz
 			 gestor = (ServicioGestorInterface)Naming.lookup(URLGestor);
 			 autenticador = (ServicioAutenticacionInterface)Naming.lookup(URLAutenticador);		
-			 //objCallback = new CallbackUsuarioImpl();
-			 
-//			 // registrar para callback
-//			 gestor.registrarCallback(objCallback);
-//			 System.out.println("Registrado para callback.");
 	 
 			 mainMenu();
 			 
@@ -128,7 +122,6 @@ public class Usuario {
                     break;
                 case "7":
                     autenticador.desconectar(nick);
-                   // gestor.eliminarRegistroCallback(objCallback);
                     System.out.print("\nCerrando sesions...\n");
                     mainMenu();
                 default: 
@@ -141,8 +134,7 @@ public class Usuario {
 	
 
 	private static void register() throws RemoteException {
-		Scanner scanner = new Scanner(System.in); 		
-		
+		Scanner scanner = new Scanner(System.in); 			
 		
 		System.out.print("Introduzca su nombre: ");
 	    String name = scanner.nextLine().trim().toLowerCase();
@@ -151,7 +143,7 @@ public class Usuario {
 	    System.out.print("Introduzca su password: ");
 	    String password = scanner.nextLine().trim().toLowerCase();    
 	    
-		if(autenticador.registrar(nick, new User(name, nick, password, new CallbackUsuarioImpl()))) {
+		if(autenticador.registrar(nick, new User(name, nick, password))) {
 			System.out.println("Se ha registrado correctamente");	    	
 		}else {
 			System.out.println("Ya existe un usuario con ese nick");
@@ -167,11 +159,7 @@ public class Usuario {
 	    System.out.print("Introduzca su password: ");
 	    String password = scanner.nextLine().trim().toLowerCase();  
 	    	   
-		if(autenticador.autenticar(nick, password)) {			
-			// registrar para callback
-			//gestor.registrarCallback(objCallback);
-			//System.out.println("Registrado para callback.");
-			// acceder a menu de usuario
+		if(autenticador.autenticar(nick, password, new CallbackUsuarioImpl())) {			
 			userMenu(nick);
 		}else {
 			System.out.println("No se encuentra usuario con ese nick / password");
@@ -242,7 +230,7 @@ public class Usuario {
 		ArrayList<Trino> pendientes = gestor.trinosPendientes().get(nick);
 		
 		if(!pendientes.isEmpty()) {
-			System.out.println("Tienes trinos pendientes:");
+			System.out.println("\nTienes trinos pendientes:");
 			for(Trino t : pendientes) {
 				System.out.println("\n> " + t.GetNickPropietario()+"#  " + t.GetTrino());
 			}
