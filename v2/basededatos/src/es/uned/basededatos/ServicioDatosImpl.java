@@ -27,6 +27,7 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 
 	private HashMap<String, User> usuariosRegistrados = new HashMap<>();	
 	private HashMap<String, User> usuariosConectados = new HashMap<>();	
+	private HashMap<String, User> usuariosBloqueados = new HashMap<>();	
 	// mapa donde key es un usuario y value su lista de contactos
 	private HashMap<String, ArrayList<User>> contactos = new HashMap<>();
 	// mapa donde key es un usuario y value su lista de seguidores
@@ -63,8 +64,17 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		    || usuariosConectados.containsKey(nick)) {
 			return false;
 		}		
-		usuariosConectados.put(nick, usuariosRegistrados.get(nick));
-		usuariosConectados.get(nick).setObjCallback(objCallback);
+		usuariosConectados.put(nick, usuariosRegistrados.get(nick));		
+		usuariosConectados.get(nick).setObjCallback(objCallback);		
+		
+		if(!usuariosBloqueados.containsKey(nick)) {
+			CallbackUsuarioInterface proxCliente =  usuariosConectados.get(nick).getObjCallback();		
+			for(Trino trino: trinosPendientes.get(nick)) {
+				proxCliente.notificame(trino);
+			}
+			limpiarBuffer(nick);	
+		}
+		
 		return true;
 	}
 	
@@ -95,9 +105,30 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 	}		
 
 	
-	public void banearUsuario() throws RemoteException {
-		// TODO Auto-generated method stub
+	public boolean agregarBloqueado(String nick) throws RemoteException {
 		
+		if(usuariosRegistrados.containsKey(nick)) {		
+			usuariosBloqueados.put(nick, usuariosRegistrados.get(nick));
+			return true;
+		}
+		return false;
+		
+	}
+	
+	public boolean borrarBloqueado(String nick) throws RemoteException {
+		
+		if(usuariosBloqueados.containsKey(nick)) {
+			usuariosBloqueados.remove(nick);
+			
+			CallbackUsuarioInterface objCB =  usuariosConectados.get(nick).getObjCallback();		
+			for(Trino trino: trinosPendientes.get(nick)) {
+				objCB.notificame(trino);
+			}
+			limpiarBuffer(nick);
+			
+			return true;
+		}
+		return false;		
 	}
 	
 	public void mostrarTrinos() throws RemoteException{
@@ -112,11 +143,10 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 	}
 
 	
-	public boolean agregarTrino(Trino trino) throws RemoteException {
+	public void agregarTrino(Trino trino) throws RemoteException {
 		
 		trinos.add(trino);
-		return true;
-		
+				
 	}
 	
 	public void agregarTrinoPendiente(String nickReceptor, Trino trino) throws RemoteException {
@@ -150,6 +180,10 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 
 	public HashMap<String, User> getUsuariosConectados() throws RemoteException {
 		return usuariosConectados;
+	}
+	
+	public HashMap<String, User> getUsuariosBloqueados() throws RemoteException {
+		return usuariosBloqueados;
 	}
 	
 	public HashMap<String, ArrayList<User>> getContactos() throws RemoteException {

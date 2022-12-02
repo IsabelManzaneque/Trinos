@@ -21,11 +21,13 @@ public interface ServicioDatosInterface extends Remote{
 	
 	public boolean borrarContacto(String miNick, String suNick) throws RemoteException;
 	
-	public void banearUsuario() throws RemoteException;
+	public boolean agregarBloqueado(String nick) throws RemoteException;
+	
+	public boolean borrarBloqueado(String nick) throws RemoteException;
 	
 	public void mostrarTrinos() throws RemoteException;
 	
-	public boolean agregarTrino(Trino trino) throws RemoteException;
+	public void agregarTrino(Trino trino) throws RemoteException;
 	
 	public void agregarTrinoPendiente(String nickReceptor, Trino trino) throws RemoteException;
 	
@@ -36,6 +38,8 @@ public interface ServicioDatosInterface extends Remote{
 	public HashMap<String, User> getUsuariosRegistrados() throws RemoteException;
 	
 	public HashMap<String, User> getUsuariosConectados() throws RemoteException;
+	
+	public HashMap<String, User> getUsuariosBloqueados() throws RemoteException;
 	
 	public HashMap<String, ArrayList<User>> getContactos() throws RemoteException;	
 	

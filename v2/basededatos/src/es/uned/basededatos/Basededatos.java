@@ -69,6 +69,7 @@ public class Basededatos {
                 	System.out.println("\tServicios activos: \n\t- " + URLDatos);
                 	System.out.println("\tUsuarios registrados: \n\t- " + datos.getUsuariosRegistrados().size());
                 	System.out.println("\tUsuarios conectados: \n\t- " + datos.getUsuariosConectados().size());
+                	System.out.println("\tUsuarios bloqueados: \n\t- " + datos.getUsuariosBloqueados().size());
                     break;
                 case "2":
                 	datos.mostrarTrinos();

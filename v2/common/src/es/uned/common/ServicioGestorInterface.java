@@ -15,7 +15,7 @@ public interface ServicioGestorInterface extends Remote{
 	
 	public HashMap<String, User> mostrarUsuarios() throws RemoteException;
 	
-	public HashMap<String, ArrayList<Trino>> trinosPendientes() throws RemoteException;
+	//public HashMap<String, ArrayList<Trino>> trinosPendientes() throws RemoteException;
 	
 	public boolean enviarTrino(Trino trino) throws RemoteException;
 	

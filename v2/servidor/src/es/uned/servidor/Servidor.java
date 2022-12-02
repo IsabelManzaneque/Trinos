@@ -100,10 +100,10 @@ public class Servidor {
                 	mostrarUsuarios(datos.getUsuariosConectados(), "conectados");
                     break;
                 case "4":
-                	System.out.print("wow 4");
+                	gestor.bloquearUsuario();          
                     break;
                 case "5":
-                	System.out.print("wow 5");
+                	gestor.desbloquearUsuario();                	
                     break;
                 case "6":
                     key.close();
@@ -124,11 +124,11 @@ public class Servidor {
 	public static void mostrarUsuarios(HashMap<String, User> map, String status) throws RemoteException {
 		
 		if(map.isEmpty()) {
-			System.out.println("No hay usuarios " + status);
+			System.out.println("\nNo hay usuarios " + status);
 		}else {
 			map.forEach((k, v) ->
 			{			
-			    System.out.println("key: " + k + " value: " + v);	           
+			    System.out.print("\nkey: " + k + " value: " + v);	           
 		    });		
 		}		
 	}

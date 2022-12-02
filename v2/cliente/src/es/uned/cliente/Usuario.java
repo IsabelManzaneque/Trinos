@@ -97,7 +97,7 @@ public class Usuario {
         System.out.println("5: Dejar de seguir a.");
         System.out.println("6: Borrar trino a los usuarios que todavía no lo han recibido (opcional).");
         System.out.println("7: Salir \"Logout\"");        
-        showPendientes(nick);
+        //showPendientes(nick);
         do {         
         	System.out.print("\nEscoja una opcion: ");
         	option = scanner.nextLine().trim();		
@@ -221,7 +221,7 @@ public class Usuario {
 	    if(gestor.enviarTrino(trino)) {
 	    	System.out.print("El trino se ha enviado con éxito");
 	    }else {
-	    	System.out.print("Error al enviar trino");
+	    	System.out.print("Tus trinos llegaran cuando se te desbloquee");
 	    }
 	}
 	
@@ -245,18 +245,18 @@ public class Usuario {
 	}
 	
 	
-	private static void showPendientes(String nick) throws RemoteException{
-		
-		ArrayList<Trino> pendientes = gestor.trinosPendientes().get(nick);
-		
-		if(!pendientes.isEmpty()) {
-			System.out.println("\nTienes trinos pendientes:");
-			for(Trino t : pendientes) {
-				System.out.println("\n> " + t.GetNickPropietario()+"#  " + t.GetTrino());
-			}
-			gestor.limpiarBuffer(nick);
-		}
-	}
+//	private static void showPendientes(String nick) throws RemoteException{
+//		
+//		ArrayList<Trino> pendientes = gestor.trinosPendientes().get(nick);
+//		
+//		if(!pendientes.isEmpty()) {
+//			System.out.println("\nTienes trinos pendientes:");
+//			for(Trino t : pendientes) {
+//				System.out.println("\n> " + t.GetNickPropietario()+"#  " + t.GetTrino());
+//			}
+//			gestor.limpiarBuffer(nick);
+//		}
+//	}
 
 }	
 

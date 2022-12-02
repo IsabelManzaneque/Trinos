@@ -5,6 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.Vector;
 
 import es.uned.common.CallbackUsuarioInterface;
@@ -44,9 +45,37 @@ public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioG
 
 	}
 	
-	public HashMap<String, ArrayList<Trino>> trinosPendientes() throws RemoteException {
-		return Servidor.getDatos().getTrinosPendientes();
+	public void bloquearUsuario() throws RemoteException{
+		
+		Scanner scanner = new Scanner(System.in); 			
+		
+		System.out.print("Introduzca el nick del usuario a bloquear: ");
+	    String nick = scanner.nextLine().trim().toLowerCase();
+	    
+	    if(Servidor.getDatos().agregarBloqueado(nick)) {
+	    	System.out.print("Se ha bloqueado el usuario");
+	    }else {
+	    	System.out.print("No se encuentra el usuario");
+	    }		
 	}
+	
+	public void desbloquearUsuario() throws RemoteException{
+		
+		Scanner scanner = new Scanner(System.in); 			
+		
+		System.out.print("Introduzca el nick del usuario a desbloquear: ");
+	    String nick = scanner.nextLine().trim().toLowerCase();
+	    
+	    if(Servidor.getDatos().borrarBloqueado(nick)) {
+	    	System.out.print("Se ha bloqueado el usuario");
+	    }else {
+	    	System.out.print("No se encuentra el usuario");
+	    }	
+	}
+	
+//	public HashMap<String, ArrayList<Trino>> trinosPendientes() throws RemoteException {
+//		return Servidor.getDatos().getTrinosPendientes();
+//	}
 	
     public void limpiarBuffer(String nick) throws RemoteException {
     	Servidor.getDatos().limpiarBuffer(nick);
@@ -69,7 +98,12 @@ public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioG
 	public boolean enviarTrino(Trino trino) throws RemoteException{
 		
 		hacerCallbacks(trino);
-		return Servidor.getDatos().agregarTrino(trino);
+		Servidor.getDatos().agregarTrino(trino);
+		
+		if(Servidor.getDatos().getUsuariosBloqueados().containsKey(trino.GetNickPropietario())) {
+			return false;
+		}		
+		return true;
 	}	
 	
 	
@@ -80,7 +114,8 @@ public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioG
 		
 		for(User u : seguidores) {
 			
-			if(Servidor.getDatos().getUsuariosConectados().containsKey(u.getNick())) {			
+			if(Servidor.getDatos().getUsuariosConectados().containsKey(u.getNick()) && 
+			  !Servidor.getDatos().getUsuariosBloqueados().containsKey(u.getNick())) {			
 				CallbackUsuarioInterface proxCliente =  u.getObjCallback();
 				proxCliente.notificame(trino);
 			}else {
