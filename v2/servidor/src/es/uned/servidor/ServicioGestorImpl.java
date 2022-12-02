@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 
 import es.uned.common.CallbackUsuarioInterface;
@@ -47,8 +48,22 @@ public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioG
 		return Servidor.getDatos().getTrinosPendientes();
 	}
 	
-    public void borrarPendientes(String nick) throws RemoteException {
+    public void limpiarBuffer(String nick) throws RemoteException {
     	Servidor.getDatos().limpiarBuffer(nick);
+    }
+    
+    /* Itera por la lista de seguidores de un usuario y si los seguidores no están conectados
+     * llama a la funcion borrarTrinosPendientes de la base de datos */
+    public void borrarPendientes(String nick) throws RemoteException {
+    	
+    	ArrayList<User>seguidores = Servidor.getDatos().getSeguidores().get(nick);
+    	
+    	for(User u : seguidores) {
+    		
+    		if(!Servidor.getDatos().getUsuariosConectados().containsKey(u.getNick())) {      			
+    			Servidor.getDatos().borrarTrinosPendientes(nick, u.getNick()); 
+    		}
+    	}
     }
 	
 	public boolean enviarTrino(Trino trino) throws RemoteException{

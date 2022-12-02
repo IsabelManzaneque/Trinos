@@ -19,6 +19,8 @@ public interface ServicioGestorInterface extends Remote{
 	
 	public boolean enviarTrino(Trino trino) throws RemoteException;
 	
+	public void limpiarBuffer(String nick) throws RemoteException;
+	
 	public void borrarPendientes(String nick) throws RemoteException;
 	
 		

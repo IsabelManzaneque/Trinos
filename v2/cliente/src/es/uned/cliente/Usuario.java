@@ -118,7 +118,7 @@ public class Usuario {
                 	unfollow(nick);
                     break;
                 case "6":
-                	System.out.print("wow 6");
+                	borrarTrinos(nick);
                     break;
                 case "7":
                     autenticador.desconectar(nick);
@@ -225,6 +225,26 @@ public class Usuario {
 	    }
 	}
 	
+	
+	private static void borrarTrinos(String nickEmisor) throws RemoteException {
+		
+		Scanner scanner = new Scanner(System.in); 
+		
+		System.out.print("Desea borrar sus trinos a los seguidores que aún no los han recibido?(s/n): ");
+	    String opcion = scanner.nextLine().trim();
+	    
+	    while(!opcion.equals("s") && !opcion.equals("s")) {
+	    	System.out.print("Inserte una opcion correcta");
+	    	opcion = scanner.nextLine().trim();
+	    }
+	    
+	    if(opcion.equals("s")) {
+	    	gestor.borrarPendientes(nickEmisor);
+	    }
+		
+	}
+	
+	
 	private static void showPendientes(String nick) throws RemoteException{
 		
 		ArrayList<Trino> pendientes = gestor.trinosPendientes().get(nick);
@@ -234,7 +254,7 @@ public class Usuario {
 			for(Trino t : pendientes) {
 				System.out.println("\n> " + t.GetNickPropietario()+"#  " + t.GetTrino());
 			}
-			gestor.borrarPendientes(nick);
+			gestor.limpiarBuffer(nick);
 		}
 	}
 

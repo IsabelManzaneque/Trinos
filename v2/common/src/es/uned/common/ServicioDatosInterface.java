@@ -29,7 +29,7 @@ public interface ServicioDatosInterface extends Remote{
 	
 	public void agregarTrinoPendiente(String nickReceptor, Trino trino) throws RemoteException;
 	
-	public void borrarTrino(Trino trino) throws RemoteException;
+	public void borrarTrinosPendientes(String nickEmisor, String nickReceptor) throws RemoteException;
 	
 	public void limpiarBuffer(String name) throws RemoteException; 
 	

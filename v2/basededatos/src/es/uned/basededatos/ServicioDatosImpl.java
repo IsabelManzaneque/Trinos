@@ -125,10 +125,17 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		
 	}
 
-	
-	public void borrarTrino(Trino trino) throws RemoteException {
+	/* Itera por la lista de trinos pendientes de un usuario y si el nick del emisor
+	 * del trino es el especificado, se borra el trino */
+	public void borrarTrinosPendientes(String nickEmisor, String nickReceptor) throws RemoteException {
+				
+		Iterator<Trino> it = getTrinosPendientes().get(nickReceptor).iterator();
 		
-		
+		while(it.hasNext()) {
+			if(it.next().GetNickPropietario().equals(nickEmisor)) {
+				it.remove();
+			}
+		}	
 	}
 
 	
