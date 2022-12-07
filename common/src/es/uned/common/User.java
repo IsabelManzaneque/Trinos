@@ -2,6 +2,10 @@ package es.uned.common;
 
 import java.io.Serializable;
 
+/**
+ * Clase que encapsula todos los datos de cada usuario del sistema junto a su
+ * CallbackUsuarioInterface
+ */
 public class User implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

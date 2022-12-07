@@ -10,15 +10,11 @@ import es.uned.common.CallbackUsuarioInterface;
 import es.uned.common.ServicioDatosInterface;
 
 
-// Servicio Datos: Este servicio hará las funciones de una “base de datos” que relacione Usuarios-Seguidores-Trinos.
-// Es decir, mantendrá la lista de usuarios registrados y/o conectados al sistema, junto con sus seguidores y trinos; 
-// y los relacionará permitiendo operaciones típicas de consulta, añadir y borrado. También debe posibilitar la operación 
-// de bloqueo de una cuenta (banear). (Servicio Autenticación y Servicio Gestor) harán uso de este servicio para realizar 
-// las operaciones sobre el estado  de los usuarios del sistema y sus seguidores.
-// El equipo docente recomienda para la implementación del servicio las clases List y HashMap de Java.
-
-//Los metodos remotos para autenticarse y registrarse los debe tener la clase impl de la base de datos
-
+/**
+ * Clase que mantiene la lista de usuarios registrados y/o conectados al sistema, 
+ * junto con sus seguidores y trinos;  Relaciona estos permitiendo operaciones de 
+ * consulta, añadir, borrado, bloqueo y desbloqueo
+ */
 public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDatosInterface{
 	
 	protected ServicioDatosImpl() throws RemoteException {
@@ -28,16 +24,16 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 	private HashMap<String, User> usuariosRegistrados = new HashMap<>();	
 	private HashMap<String, User> usuariosConectados = new HashMap<>();	
 	private HashMap<String, User> usuariosBloqueados = new HashMap<>();	
-	// mapa donde key es un usuario y value su lista de contactos
 	private HashMap<String, ArrayList<User>> contactos = new HashMap<>();
-	// mapa donde key es un usuario y value su lista de seguidores
 	private HashMap<String, ArrayList<User>> seguidores = new HashMap<>();
-	// mapa con el usuario pendiente de recibir mensajes y una lista de los mensajes pendientes
 	private HashMap<String, ArrayList<Trino>> trinosPendientes = new HashMap<>();	
-	// array con todos los trinos de todos los usuarios 
 	private ArrayList<Trino> trinos = new ArrayList<>();
 	
-		
+	
+	/**
+	 * Anade un usuario al HashMap usuariosRegistrados. Asocia al nuevo usuario
+	 * estructuras para guardar sus trinos pendientes, seguidores y contactos
+	 */
 	public boolean agregarUsuario(String nick, User user) throws RemoteException {
 		
 		if(usuariosRegistrados.containsKey(nick)) {
@@ -50,12 +46,23 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		return true;
 	}
 	
-	
+	/**
+	 * Borra un usuario del HashMap usuariosRegistrados. Borra las estructuras
+	 * asociadas para guardar sus trinos pendientes, seguidores y contactos
+	 */
 	public void borrarUsuario(String nick) throws RemoteException {	
 		
 		usuariosRegistrados.remove(nick);
+		contactos.remove(nick);
+		seguidores.remove(nick);
+		trinosPendientes.remove(nick);
 	}
 	
+	/**
+	 * Anade un usuario al HashMap usuariosConectados. Comprueba si el usuario
+	 * tiene trinos pendientes y si se cumple con las condiciones, los muestra.
+	 * Se asocia al usuario un objeto que implementa CallbackUsuarioInterface
+	 */
 	public boolean agregarConectado(String nick, String password, CallbackUsuarioInterface objCallback) throws RemoteException {
 		
 		if(!usuariosRegistrados.containsKey(nick) || !usuariosRegistrados.get(nick).getPassword().equals(password) 
@@ -76,38 +83,49 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 				}
 			}
 			limpiarBuffer(nick);	
-		}
-		
+		}		
 		return true;
 	}
 	
+	/**
+	 * Borra un usuario del HashMap usuariosConectados. Al hacerlo, evalua 
+	 * su Objeto CallbackUsuarioInterface a null.
+	 */
 	public void borrarConectado(String nick) throws RemoteException {
 		
 		usuariosConectados.get(nick).setObjCallback(null);
 		usuariosConectados.remove(nick);
 	}
 	
-	public boolean agregarContacto(String miNick, String suNick) throws RemoteException {
+	/**
+	 * Anade un usuario al HashMap de contactos de otro usuario. 
+	 */
+	public boolean agregarContacto(String nickFollower, String nickFollowed) throws RemoteException {
 		
-		if(usuariosRegistrados.containsKey(suNick)) {			
-			contactos.get(miNick).add(usuariosRegistrados.get(suNick));
-			seguidores.get(suNick).add(usuariosRegistrados.get(miNick));
+		if(usuariosRegistrados.containsKey(nickFollowed)) {		
+			contactos.get(nickFollower).add(usuariosRegistrados.get(nickFollowed));
+			seguidores.get(nickFollowed).add(usuariosRegistrados.get(nickFollower));
 			return true;		
 		}
 		return false;
 	}
 	
-	public boolean borrarContacto(String miNick, String suNick) throws RemoteException{
+	/**
+	 * Borra un usuario del HashMap de contactos de otro usuario. 
+	 */
+	public boolean borrarContacto(String nickFollower, String nickFollowed) throws RemoteException{
 		
-		if(contactos.get(miNick).contains(usuariosRegistrados.get(suNick))) {
-			contactos.get(miNick).remove(usuariosRegistrados.get(suNick));  
-			seguidores.get(suNick).remove(usuariosRegistrados.get(miNick));
+		if(contactos.get(nickFollower).contains(usuariosRegistrados.get(nickFollowed))) {
+			contactos.get(nickFollower).remove(usuariosRegistrados.get(nickFollowed));  
+			seguidores.get(nickFollowed).remove(usuariosRegistrados.get(nickFollower));
 			return true;
 		}
 		return false;		
 	}		
 
-	
+	/**
+	 * Anade un usuario al HashMap de usuarios bloqueados. 
+	 */
 	public boolean agregarBloqueado(String nick) throws RemoteException {
 		
 		if(usuariosRegistrados.containsKey(nick)) {		
@@ -118,6 +136,11 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		
 	}
 	
+	/**
+	 * Elimina un usuario al HashMap de usuarios bloqueados. Si tenia trinos
+	 * pendientes de usuarios, los recibe. Si otros usuarios tenian trinos
+	 * pendientes del usuario desbloqueado, los reciben.
+	 */
 	public boolean borrarBloqueado(String nick) throws RemoteException {
 		
 		if(usuariosBloqueados.containsKey(nick)) {
@@ -150,6 +173,10 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		return false;		
 	}
 	
+	/**
+	 * Muestra los trinos guardados en el ArrayList de trinos si los hay. Si no
+	 * los hay, se informa al usuario
+	 */
 	public void mostrarTrinos() throws RemoteException{
 		if(trinos.isEmpty()) {
 			System.out.println("No hay trinos en la base de datos");
@@ -161,21 +188,27 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		}		
 	}
 
-	
+	/**
+	 * Anade un nuevo trino al ArrayList de trinos
+	 */
 	public void agregarTrino(Trino trino) throws RemoteException {
 		
-		trinos.add(trino);
-				
+		trinos.add(trino);				
 	}
 	
+	/**
+	 * Anade un nuevo trino al HashMap de trinos pendientes vinculado a
+	 * un usuario 
+	 */
 	public void agregarTrinoPendiente(String nickReceptor, Trino trino) throws RemoteException {
 		
-		trinosPendientes.get(nickReceptor).add(trino);		
-		
+		trinosPendientes.get(nickReceptor).add(trino);				
 	}
 
-	/* Itera por la lista de trinos pendientes de un usuario y si el nick del emisor
-	 * del trino es el especificado, se borra el trino */
+	/**
+	 * Itera por la lista de trinos pendientes de un usuario y si el nick del emisor
+	 * del trino es el especificado, se borra el trino
+	 */
 	public void borrarTrinosPendientes(String nickEmisor, String nickReceptor) throws RemoteException {
 				
 		Iterator<Trino> it = getTrinosPendientes().get(nickReceptor).iterator();
@@ -187,32 +220,52 @@ public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDa
 		}	
 	}
 
-	
+	/**
+	 * Elimina todos los trinos pendientes asociados a un usuario
+	 */
 	public void limpiarBuffer(String nick) throws RemoteException {		
 
 		trinosPendientes.get(nick).clear();		
 	}
 	
+	/**
+	 * Getter de HashMap usuariosRegistrados
+	 */
 	public HashMap<String, User> getUsuariosRegistrados() throws RemoteException {
 		return usuariosRegistrados;
 	}
-
+	
+	/**
+	 * Getter de HashMap usuariosConectados
+	 */
 	public HashMap<String, User> getUsuariosConectados() throws RemoteException {
 		return usuariosConectados;
 	}
 	
+	/**
+	 * Getter de HashMap usuariosBloqueados
+	 */
 	public HashMap<String, User> getUsuariosBloqueados() throws RemoteException {
 		return usuariosBloqueados;
 	}
 	
+	/**
+	 * Getter de HashMap de contactos asociado a un usuario
+	 */
 	public HashMap<String, ArrayList<User>> getContactos() throws RemoteException {
 		return contactos;
 	}
 	
+	/**
+	 * Getter de HashMap de seguidores asociado a un usuario
+	 */
 	public HashMap<String, ArrayList<User>> getSeguidores() throws RemoteException {
 		return seguidores;
 	}
 	
+	/**
+	 * Getter de HashMap de trinos pendientes asociado a un usuario
+	 */
 	public HashMap<String, ArrayList<Trino>> getTrinosPendientes() throws RemoteException {
 		return trinosPendientes;
 	}

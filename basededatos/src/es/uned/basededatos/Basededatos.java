@@ -6,25 +6,29 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 
-// Clase que contiene el main de la entidad Base de Datos. Levanta la base de datos
-
+/**
+ * La clase Basededatos se encarga de almacenar todos los datos del sistema. 
+ * Ofrece su servicio a la entidad Servidor
+ */
 public class Basededatos {	
 	
 	private static int puerto = 5555;
-	// Crea una URL para los objetos remotos de los cuales utilizara metodos
 	private static String URLDatos = "rmi://localhost:"+ puerto + "/Datos";
+	private static ServicioDatosImpl datos;
 	
+	/**
+	 * Main de la Base de datos que levanta el servicio y publica
+	 * su servicio de datos 
+	 */
 	public static void main(String[] args) {
 		
 		try {			
-			// ENLCADE CON SERVICIOS GESTOR Y AUTENTICADOR
-			arrancarRegistro(puerto);			
-			// Crea un objeto de la clase impl que implementa la interfaz remota
-			ServicioDatosImpl datos = new ServicioDatosImpl();			
-			// Exporta el objeto remoto	
-			Naming.rebind(URLDatos, datos);			
 			
-			menu(datos);
+			datos = new ServicioDatosImpl();			
+			arrancarRegistro(puerto);			
+			// Exporta el objeto remoto	
+			Naming.rebind(URLDatos, datos);				
+			menu();
 			
 		}catch(Exception e){
 			System.out.println("Excepción en Basededatos.main: " + e);			
@@ -32,34 +36,32 @@ public class Basededatos {
 	}
 	
 	
-	// arranca un servidor de registro RMI si no está actualmente en ejecución, 
-	// en un número de puerto especificado por el usuario
+	/**
+	 * Arranca un servidor de registro RMI si no está actualmente en ejecución 
+	 */
 	private static void arrancarRegistro(int numPuertoRMI) throws RemoteException{
 		
 		try {
 			Registry registro = LocateRegistry.getRegistry(numPuertoRMI);
-			registro.list(); // Esta llamada lanza una excepción si el registro no existe
-		
+			registro.list(); 		
 		}catch(RemoteException e) {
-			 // Registro no válido en este puerto
-			 System.out.println("El registro RMI no se puede localizar en el puerto "+ numPuertoRMI);
-			 Registry registro = LocateRegistry.createRegistry(numPuertoRMI);
-			 System.out.println("Registro RMI creado en el puerto " + numPuertoRMI);			
+			 Registry registro = LocateRegistry.createRegistry(numPuertoRMI);			
 		}
 	}
 	
-	
-	public static void menu(ServicioDatosImpl datos) throws RemoteException{
+	/**
+	 * Menu principal de la base de datos que llama a cada funcion que implementa
+	 * el servicio de datos
+	 */	
+	public static void menu() throws RemoteException{
 		Scanner key = new Scanner(System.in); 
-		String option; 
-		  
+		String option; 		  
         System.out.println("\n ----------------------------------------------------------");
         System.out.println(" |                 * Menu Base de Datos *                 |");                               
         System.out.println(" ----------------------------------------------------------\n");
         System.out.println("1: Informacion de la base de datos.");
         System.out.println("2: Listar Trinos (solo nick del propietario y el timestamp).");
-        System.out.println("3: Salir.");
-        
+        System.out.println("3: Salir.");        
            
         do {         
         	System.out.print("\nEscoja una opcion: ");

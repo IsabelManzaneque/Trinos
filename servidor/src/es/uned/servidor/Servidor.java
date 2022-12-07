@@ -10,45 +10,46 @@ import es.uned.common.ServicioDatosInterface;
 import es.uned.common.User;
 
 
-//La entidad Servidor se encarga de controlar el proceso de autenticación de
-//los usuarios del sistema y gestión de sus mensajes
-
-//La clase del servidor de objeto instancia y exporta un objeto de la implementación de
-//la interfaz remota. La Figura 7.10 muestra una plantilla para la clase del servidor de
-//objeto.
+/**
+ * La clase Servidor se encarga de controlar el proceso de autenticación de
+ * los usuarios del sistema y gestión de sus trinos haciendo uso del servicio 
+ * de autenticacion y el servicio gestor 
+ */
 
 public class Servidor {
 
 	
 	private static int puertoSalida = 8888;	
 	private static int puertoEntrada = 5555;
-	// Crea una URL para los objetos remotos de los cuales utilizara metodos
 	private static String URLGestor = "rmi://localhost:"+ puertoSalida + "/Gestor";
 	private static String URLAutenticador = "rmi://localhost:"+ puertoSalida + "/Autenticador";
-	private static String URLDatos = "rmi://localhost:" + puertoEntrada + "/Datos";
-	
+	private static String URLDatos = "rmi://localhost:" + puertoEntrada + "/Datos";	
 	private static ServicioDatosInterface datos;
+	private static ServicioGestorImpl gestor;
+	private static ServicioAutenticacionImpl autenticador;
 	
+	
+	/**
+	 * Main del Servidor que levanta el servicio y establece la 
+	 * conexión con la base de datos y los servicios gestor y autenticador
+	 */
 	public static void main(String[] args) throws Exception {		
 		
 		try {			
+						
+		    // Busqueda del objeto de la base de datos
+			datos = (ServicioDatosInterface)Naming.lookup(URLDatos);				 
+			// objetos de las clases impl que implementan las interfaces remotas
+			gestor = new ServicioGestorImpl();
+			autenticador = new ServicioAutenticacionImpl();
 			
-			// ENLACE CON LA BBDD			
-		    // Busqueda del objeto remoto y cast del objeto de la interfaz
-			datos = (ServicioDatosInterface)Naming.lookup(URLDatos);		
+			arrancarRegistro(puertoSalida);	
 			
-	  		// ENLCADE CON SERVICIOS GESTOR Y AUTENTICADOR			 
-			// arranca el registro
-			arrancarRegistro(puertoSalida);
-			 
-			// Crea un objeto de las clases impl que implementan las interfaces remotas
-			ServicioGestorImpl gestor = new ServicioGestorImpl();
-			ServicioAutenticacionImpl autenticador = new ServicioAutenticacionImpl();
-					
+			//Exporta objetos remotos
 			Naming.rebind(URLGestor, gestor);
 			Naming.rebind(URLAutenticador, autenticador);
 						
-			menu(gestor, autenticador,datos);
+			menu();
 			
 		}catch(Exception e) {
 			System.out.println("Excepción en Servidor.main: " + e);
@@ -56,23 +57,10 @@ public class Servidor {
 
 	}
 	
-	// arranca un servidor de registro RMI si no está actualmente en ejecución, 
-	private static void arrancarRegistro(int numPuertoRMI) throws RemoteException{
-		
-		try {
-			Registry registro = LocateRegistry.getRegistry(numPuertoRMI);
-			// lanza una excepción si el registro no existe
-			registro.list(); 		
-		}catch(RemoteException e) {
-			// Registro no válido en este puerto
-			System.out.println("El registro RMI no se puede localizar en el puerto "+ numPuertoRMI);
-			Registry registro = LocateRegistry.createRegistry(numPuertoRMI);
-			System.out.println("Registro RMI creado en el puerto " + numPuertoRMI);			
-		}
-	}
-	
-	
-	public static void menu(ServicioGestorImpl gestor,ServicioAutenticacionImpl autenticador, ServicioDatosInterface datos) throws RemoteException{
+	/**
+	 * Menu principal del servidor que llama a cada funcion que implementa el servidor
+	 */	
+	public static void menu() throws RemoteException{
 		Scanner key = new Scanner(System.in); 
 		String option; 
 		  
@@ -116,11 +104,22 @@ public class Servidor {
 		
 	}
 	
-	
-	public static ServicioDatosInterface getDatos() {
-		return datos;
+	/**
+	 * Arranca un servidor de registro RMI si no está actualmente en ejecución 
+	 */
+	private static void arrancarRegistro(int numPuertoRMI) throws RemoteException{
+		
+		try {
+			Registry registro = LocateRegistry.getRegistry(numPuertoRMI);
+			registro.list(); 		
+		}catch(RemoteException e) {
+			Registry registro = LocateRegistry.createRegistry(numPuertoRMI);	
+		}
 	}
 	
+	/**
+	 * Funcion auxiliar para mostrar Hashmaps por salida estandar
+	 */
 	public static void mostrarUsuarios(HashMap<String, User> map, String status) throws RemoteException {
 		
 		if(map.isEmpty()) {
@@ -128,9 +127,16 @@ public class Servidor {
 		}else {
 			map.forEach((k, v) ->
 			{			
-			    System.out.print("\nkey: " + k + " value: " + v);	           
+			    System.out.println(" - " + v);	           
 		    });		
 		}		
+	}
+	
+	/**
+	 * Getter del servicio de datos
+	 */
+	public static ServicioDatosInterface getDatos() {
+		return datos;
 	}
 	
 }

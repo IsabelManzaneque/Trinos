@@ -13,22 +13,15 @@ import es.uned.common.ServicioGestorInterface;
 import es.uned.common.Trino;
 import es.uned.common.User;
 
-
-
-// Para ejecutar esta clase el servidor debe estar corriendo!! arrancar registro, ejecutar
-// mainServidor y no cerrarlo
-
-// Clase que contiene el main de la entidad Usuario/Cliente.
-// Clientes: A través de estos, los usuarios, que son los actores principales del sistema, interactúan entre ellos 
-// enviándose trinos y haciéndose seguidores unos de otros. Los usuarios se registran en el sistema a través de la 
-// entidad Servidor. Una ver registrados se logean usando también esta entidad Servidor para poder enviar trinos y 
-// hacerse seguidores de otros usuarios. Así pues, se tiene que implementar un callback para recibir los trinos de 
-// aquellos usuarios a los que siguen
+/**
+ * Clase que contiene el main de la entidad Usuario. Contiene funciones que interactuan con 
+ * el servidor para registrarse y logearse/deslogearse en el sitema e interactuar con otros
+ * usuarios enviandose trinos y haciendose seguidores unos de otros
+ */
 
 public class Usuario {
 	
 	private static int puerto = 8888;	
-	// Crea una URL para los objetos remotos de los cuales utilizara metodos
 	private static String URLGestor = "rmi://localhost:" + puerto + "/Gestor";
 	private static String URLAutenticador = "rmi://localhost:" + puerto + "/Autenticador";
 	private static ServicioGestorInterface gestor;
@@ -37,9 +30,8 @@ public class Usuario {
 	public static void main(String[] args){		
 					
 		try {			 
-			 
-			 // ENLCADE CON SERVIDOR: SERVICIOS GESTOR y AUTENTICADOR	 
-			 // Busqueda de los objetos remotos y cast del objeto de la interfaz
+			  
+			 // Busqueda de los objetos remotos 
 			 gestor = (ServicioGestorInterface)Naming.lookup(URLGestor);
 			 autenticador = (ServicioAutenticacionInterface)Naming.lookup(URLAutenticador);		
 	 
@@ -50,11 +42,14 @@ public class Usuario {
 		 }
 	}
 	
-	
+	/**
+	 * Menu principal de Usuario. Permite a los usuarios registrarse y autenticarse
+	 * en el sistema, mostrando el menu especifico de cada usuario. 
+	 */	
 	public static void mainMenu() throws RemoteException{
 		Scanner key = new Scanner(System.in); 
 		String option; 
-		  
+		
         System.out.println("\n -----------------------------------------------------------");
         System.out.println(" |                    * Menu Usuario *                    |");                               
         System.out.println(" -----------------------------------------------------------\n");
@@ -79,9 +74,13 @@ public class Usuario {
                 default: 
                     System.out.print("\nInserte una opcion valida");    
             }            
-        } while(option !="3");
-		
+        } while(option !="3");		
 	}
+	
+	/**
+	 * Menu de especifico de usuario que permite a estos acceder a las funciones que les permiten
+	 * interactuar con otros usuarios. Al hacer logout, volveran al menu principal de usuario
+	 */	
 	public static void userMenu(String nick) throws RemoteException{
 		Scanner scanner = new Scanner(System.in); 
 		String option; 
@@ -127,12 +126,13 @@ public class Usuario {
                 default: 
                     System.out.print("\nInserte una opcion valida");    
             }            
-        } while(option !="7");
-		
-	}
+        } while(option !="7");		
+	}	
 	
-	
-
+	/**
+	 * Registra un nuevo usuario pidiendo sus datos personales y mandandolos
+	 * al servidor. El nick debe ser unico para cada usuario
+	 */	
 	private static void register() throws RemoteException {
 		Scanner scanner = new Scanner(System.in); 			
 		
@@ -150,6 +150,10 @@ public class Usuario {
 		}	
 	}
 	
+	/**
+	 * Autentica un usuario pidiendo a traves de su nick y contrasena. Si el 
+	 * usuario existe, se le asigna un objeto CallbackUsuarioImple
+	 */	
 	private static void login() throws RemoteException {
 		
 		Scanner scanner = new Scanner(System.in); 		
@@ -166,49 +170,65 @@ public class Usuario {
 		}			
 	}
 	
-	
+	/**
+	 * Muestra a todos los usuarios registrados en el sistema
+	 */	
 	private static void listarUsuarios() throws RemoteException {
 		
 		if(gestor.mostrarUsuarios().isEmpty()) {
 			System.out.println("No hay usuarios registrados");
 		}else {
+			System.out.println("Nicks de los usuarios registrados en el sistema: ");
 			gestor.mostrarUsuarios().forEach((k, v) ->
 			{			
-			    System.out.println("key: " + k + " value: " + v);	           
+			    System.out.println(" - " + k);	           
 		    });		
 		}			
 	}
 	
 	
-	private static void follow(String miNick) throws RemoteException {
+	/**
+	 * Comienza a seguir a un usuario si este esta registrado en el sistema.
+	 * Al hacerlo, el seguidor comenzara a recibir los trinos del nuevo
+	 * contacto si este no esta conectado
+	 */	
+	private static void follow(String nickFollower) throws RemoteException {
 		
 		Scanner scanner = new Scanner(System.in); 		
 		
 		System.out.print("Introduzca nick de usuario que quiere seguir: ");
-	    String suNick = scanner.nextLine().trim().toLowerCase();
+	    String nickFollowed = scanner.nextLine().trim().toLowerCase();
 		           
-		if(gestor.seguir(miNick, suNick)) {
+		if(gestor.seguir(nickFollower, nickFollowed)) {
 			System.out.println("Se ha comenzado a seguir al usuario");
 		}else {
 			System.out.println("No se encuentra usuario con ese nick");
 		}
 	}
 	
-	private static void unfollow(String miNick) throws RemoteException {
+
+	/**
+	 * Deja de seguir a un usuario si este esta en la lista de contactos.
+	 * Al hacerlo, el usuario dejara de recibir los trinos del ya no contacto
+	 */	
+	private static void unfollow(String nickFollower) throws RemoteException {
 		
         Scanner scanner = new Scanner(System.in); 		
 		
 		System.out.print("Introduzca nick de usuario que quiere dejar de seguir: ");
-	    String suNick = scanner.nextLine().trim().toLowerCase();
+	    String nickFollowed = scanner.nextLine().trim().toLowerCase();
 		       	    
-		if(gestor.dejarDeSeguir(miNick, suNick)) {
+		if(gestor.dejarDeSeguir(nickFollower, nickFollowed)) {
 			System.out.println("Se ha dejado de seguir al usuario");
 		}else {
 			System.out.println("El usuario no esta en su lista de contactos");
 		}		   
 	}		
 	
-	
+	/**
+	 * Envia un trino que recibiran los seguidores del usuario. Si el usuario
+	 * esta bloqueado, sus trinos llegaran a sus seguidores cuando se le desbloquee
+	 */	
 	private static void sendTrino(String miNick) throws RemoteException {
 		
 		Scanner scanner = new Scanner(System.in); 
@@ -225,7 +245,10 @@ public class Usuario {
 	    }
 	}
 	
-	
+	/**
+	 * Borra los trinos enviados de aquellos usuarios que no los hubieran 
+	 * recibido aun por estar bloqueados o desconectados
+	 */	
 	private static void borrarTrinos(String nickEmisor) throws RemoteException {
 		
 		Scanner scanner = new Scanner(System.in); 
