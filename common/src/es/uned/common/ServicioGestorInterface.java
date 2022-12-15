@@ -7,6 +7,8 @@ import java.util.HashMap;
 
 /**
  * Interfaz remota del servicio Gestor que depende de la entidad Servidor 
+ * 
+ * @author Isabel Manzaneque, imanzaneq3@alumno.uned.es
  */
 public interface ServicioGestorInterface extends Remote{	
 	

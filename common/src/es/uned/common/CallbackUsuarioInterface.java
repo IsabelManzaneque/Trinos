@@ -7,6 +7,8 @@ import java.rmi.RemoteException;
 /**
  * Interfaz remota que permite al usuario recibir automaticamente
  * los trinos de aquellos usuarios a los que sigue
+ * 
+ * @author Isabel Manzaneque, imanzaneq3@alumno.uned.es
  */
 public interface CallbackUsuarioInterface extends Remote {
 	

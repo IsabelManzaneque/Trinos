@@ -17,6 +17,8 @@ import es.uned.common.User;
  * Clase que contiene el main de la entidad Usuario. Contiene funciones que interactuan con 
  * el servidor para registrarse y logearse/deslogearse en el sitema e interactuar con otros
  * usuarios enviandose trinos y haciendose seguidores unos de otros
+ * 
+ * @author Isabel Manzaneque, imanzaneq3@alumno.uned.es
  */
 
 public class Usuario {

@@ -14,6 +14,8 @@ import es.uned.common.User;
  * La clase Servidor se encarga de controlar el proceso de autenticación de
  * los usuarios del sistema y gestión de sus trinos haciendo uso del servicio 
  * de autenticacion y el servicio gestor 
+ * 
+ * @author Isabel Manzaneque, imanzaneq3@alumno.uned.es
  */
 
 public class Servidor {

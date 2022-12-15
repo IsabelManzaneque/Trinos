@@ -8,6 +8,8 @@ import java.util.HashMap;
 
 /**
  * Interfaz remota del servicio de datos que depende de la entidad Basededatos 
+ * 
+ * @author Isabel Manzaneque, imanzaneq3@alumno.uned.es
  */
 public interface ServicioDatosInterface extends Remote{
 	

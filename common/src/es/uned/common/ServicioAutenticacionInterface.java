@@ -6,6 +6,8 @@ import java.rmi.RemoteException;
 
 /**
  * Interfaz remota del servicio de autenticación que depende de la entidad Servidor 
+ * 
+ * @author Isabel Manzaneque, imanzaneq3@alumno.uned.es
  */
 public interface ServicioAutenticacionInterface extends Remote{
 	

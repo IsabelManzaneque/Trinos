@@ -9,6 +9,8 @@ import java.util.Scanner;
 /**
  * La clase Basededatos se encarga de almacenar todos los datos del sistema. 
  * Ofrece su servicio a la entidad Servidor
+ * 
+ * @author Isabel Manzaneque, imanzaneq3@alumno.uned.es
  */
 public class Basededatos {	
 	

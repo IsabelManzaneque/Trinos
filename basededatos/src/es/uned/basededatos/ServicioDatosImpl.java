@@ -14,6 +14,8 @@ import es.uned.common.ServicioDatosInterface;
  * Clase que mantiene la lista de usuarios registrados y/o conectados al sistema, 
  * junto con sus seguidores y trinos;  Relaciona estos permitiendo operaciones de 
  * consulta, añadir, borrado, bloqueo y desbloqueo
+ * 
+ * @author Isabel Manzaneque, imanzaneq3@alumno.uned.es
  */
 public class ServicioDatosImpl extends UnicastRemoteObject implements ServicioDatosInterface{
 	

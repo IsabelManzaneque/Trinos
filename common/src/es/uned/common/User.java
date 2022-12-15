@@ -5,6 +5,8 @@ import java.io.Serializable;
 /**
  * Clase que encapsula todos los datos de cada usuario del sistema junto a su
  * CallbackUsuarioInterface
+ * 
+ * @author Isabel Manzaneque, imanzaneq3@alumno.uned.es
  */
 public class User implements Serializable{
 	

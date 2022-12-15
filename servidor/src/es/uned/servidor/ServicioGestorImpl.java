@@ -18,6 +18,8 @@ import es.uned.common.User;
  * Clase que se encarga de gestionar todas las operaciones de los usuarios en 
  * relacion con enviar  trinos, bloquear y hacerse seguidor de otros usuarios.
  * Implementa la interfaz remota ServicioGestorInterface. 
+ * 
+ * @author Isabel Manzaneque, imanzaneq3@alumno.uned.es
  */
 public class ServicioGestorImpl extends UnicastRemoteObject implements ServicioGestorInterface{		
 	

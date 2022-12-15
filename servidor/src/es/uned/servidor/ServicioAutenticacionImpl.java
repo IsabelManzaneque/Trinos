@@ -15,6 +15,8 @@ import es.uned.common.User;
  * Clase que se encarga de registrar y de autenticar a los usuarios del sistema. 
  * El usuario accede y se desconecta del sistema utilizando este servicio.
  * Implementa la interfaz remota ServicioAutenticacionInterface. 
+ * 
+ * @author Isabel Manzaneque, imanzaneq3@alumno.uned.es
  */
 public class ServicioAutenticacionImpl extends UnicastRemoteObject implements ServicioAutenticacionInterface{
 		

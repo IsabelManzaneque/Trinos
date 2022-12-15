@@ -10,6 +10,8 @@ import es.uned.common.Trino;
  * Clase que implementa la interfaz remota CallbackUsuarioInterface. Se arranca 
  * desde el cliente y tiene un único método que se encarga de hacerle llegar los trinos 
  * que publican los usuarios a los que sigue el usuario logueado de forma automática. 
+ * 
+ * @author Isabel Manzaneque, imanzaneq3@alumno.uned.es
  */
 
 public class CallbackUsuarioImpl extends UnicastRemoteObject implements CallbackUsuarioInterface{
