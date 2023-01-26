@@ -5,6 +5,7 @@ Implementación de un sistema básico de microblogging estilo Twitter®
 * [Información general](#información-general)
 * [Estructura del sistema](#estructura-del-sistema)
 * [Tecnologías](#tecnologías)
+* [Setup](#setup)
 
 ## Información general
 
@@ -44,11 +45,25 @@ entidad servidor como el intermediario entre la base de datos y los clientes.
 <img width="473" alt="image" src="https://user-images.githubusercontent.com/86284395/214815251-c88f1f77-6e47-424c-99ba-8c6e7655fd30.png">
 
 
-
 ## Tecnologías
 
 * IDE: Eclipse 2021 – 03
 * Java version "18" 2022-03-22
 * Java(TM) SE Runtime Environment (build 18+36-2087)
 * Java HotSpot(TM) 64-Bit Server VM (build 18+36-2087, mixed mode, sharing)
+
+
+## Setup
+Para arrancar el proyecto:
+
+```
+Descargar y extraer .zip del proyecto
+Ejecutar archivos .bat en el siguiente orden:
+ 1 - basededatos.bat
+ 2 - servidor.bat
+ 3 - cliente.bat
+Se pueden crear múltiples procesos cliente pero solo 
+un proceso basededatos y un proceso servidor
+
+```
 
