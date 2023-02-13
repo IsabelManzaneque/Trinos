@@ -1,5 +1,5 @@
 # Trinos
-Implementación de un sistema básico de microblogging estilo Twitter®
+Implementación de un sistema básico de microblogging
 
 ## Tabla de contenidos
 * [Información general](#información-general)
@@ -9,9 +9,9 @@ Implementación de un sistema básico de microblogging estilo Twitter®
 
 ## Información general
 
-Este proyecto implementa la simulación de un sistema básico de microblogging estilo Twitter®. Este software permitirá a una serie de usuarios 
-registrarse en el sistema de mensajería instantánea y realizar distintas interacciones con otros usuarios como seguir o dejar de seguir,
-enviar trinos, búsqueda de usuarios en el sistema etc.
+Este proyecto implementa la simulación de un sistema básico de microblogging. Este software permitirá a una serie de usuarios registrarse en el
+sistema de mensajería instantánea y realizar distintas interacciones con otros usuarios como seguir o dejar de seguir, enviar trinos, búsqueda 
+de usuarios en el sistema etc.
 
 Para la implementación de este sistema se ha utilizado la tecnología Java RMI, un mecanismo que permite realizar llamadas a métodos de objetos 
 remotos situados en distintas (o la misma) máquinas virtuales Java, compartiendo así recursos y carga de procesamiento a través de varios
